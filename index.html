@@ -1,0 +1,1806 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Générateur de citations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700&family=Archivo+Black&family=Bebas+Neue&family=Mr+Dafoe&family=Mrs+Saint+Delafield&family=Playfair+Display:ital,wght@1,700&family=Yellowtail&display=swap">
+<style>
+/* Mise en page : aperçu fixe à gauche, réglages groupés à droite, une colonne sur téléphone */
+:root{
+  --bg:#EEF0F3; --panel:#FFFFFF; --fg:#16181C; --muted:#586070; --line:#D3D8DF;
+  --field:#F6F7F9; --accent:#C42A1E; --accent-fg:#FFFFFF; --stage:#DDE1E7; --focus:#1D5FD1;
+  --danger:#B3261E;
+  --font-ui:'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display:'Anton', Impact, 'Arial Narrow', sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1114; --panel:#171A1F; --fg:#ECEEF2; --muted:#9BA4B2; --line:#2A3038;
+    --field:#1E2228; --accent:#D8402F; --accent-fg:#FFFFFF; --stage:#0A0B0D; --focus:#6FA3FF;
+    --danger:#FF7A6E;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1114; --panel:#171A1F; --fg:#ECEEF2; --muted:#9BA4B2; --line:#2A3038;
+  --field:#1E2228; --accent:#D8402F; --accent-fg:#FFFFFF; --stage:#0A0B0D; --focus:#6FA3FF;
+  --danger:#FF7A6E;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--font-ui); font-size:15px; line-height:1.45;
+  margin:0; padding-inline:16px; padding-block:22px 56px;
+}
+.wrap{max-width:1280px; margin-inline:auto}
+header.top{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 24px; margin-bottom:20px}
+h1{font-family:var(--font-display); font-weight:400; font-size:34px; line-height:1.05; letter-spacing:.02em; text-transform:uppercase; margin:0}
+header.top p{margin:0; color:var(--muted); max-width:66ch; min-width:0}
+.app{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:24px; align-items:start}
+.stage{position:sticky; top:calc(env(safe-area-inset-top,0px) + 12px); min-width:0}
+.screen{background:var(--stage); border-radius:10px; padding:14px; display:flex; justify-content:center; align-items:center; min-height:120px}
+.screen.over{outline:2px dashed var(--accent); outline-offset:-6px}
+#cv{touch-action:none; display:block; max-width:100%; max-height:76vh; width:auto; height:auto; border-radius:3px; box-shadow:0 8px 28px rgba(0,0,0,.28)}
+.bar{display:flex; flex-wrap:wrap; gap:10px 14px; align-items:end; margin-top:12px}
+.bar .f{min-width:0; flex:1 1 200px}
+.bar .f.fit{flex:0 0 auto}
+.status{min-height:1.4em; margin:8px 2px 0; color:var(--muted); font-size:13px}
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; min-width:0}
+.grp{padding:18px 18px 20px; display:flex; flex-direction:column; gap:12px; min-width:0}
+.grp + .grp{border-top:1px solid var(--line)}
+h2{font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin:0}
+.f{display:flex; flex-direction:column; gap:5px; min-width:0}
+.f > span, .lbl{font-size:13px; font-weight:600}
+.f.inline{flex-direction:row; align-items:center; gap:9px}
+.f.inline > span{font-weight:400}
+.hint{margin:0; font-size:13px; color:var(--muted)}
+input[type=text], textarea, select{
+  width:100%; min-width:0; font:inherit; color:var(--fg); background:var(--field);
+  border:1px solid var(--line); border-radius:6px; padding:8px 10px;
+}
+textarea{resize:vertical; min-height:92px; line-height:1.4}
+input[type=range]{width:100%; accent-color:var(--accent); margin:2px 0}
+input[type=checkbox]{width:17px; height:17px; accent-color:var(--accent); margin:0; flex:none}
+input[type=color]{width:100%; height:38px; padding:2px; border:1px solid var(--line); border-radius:6px; background:var(--field); cursor:pointer}
+input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
+:is(input,textarea,select,button,label.drop):focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+.row{display:flex; flex-wrap:wrap; gap:8px}
+.btn{
+  font:inherit; font-weight:600; font-size:14px; cursor:pointer; color:var(--fg); background:var(--field);
+  border:1px solid var(--line); border-radius:6px; padding:8px 13px; min-height:38px;
+}
+.btn:hover{border-color:var(--muted)}
+.btn.main{background:var(--accent); border-color:var(--accent); color:var(--accent-fg); padding-inline:18px}
+.btn.main:hover{filter:brightness(1.08)}
+.btn.warn{border-color:var(--danger); color:var(--danger)}
+.btn.sm{min-height:34px; padding:5px 10px; font-size:13px}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+.two{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.three{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px}
+.rng{display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; gap:4px 10px}
+.rng > span{grid-column:1}
+.rng output{grid-column:2; grid-row:1; font-variant-numeric:tabular-nums; color:var(--muted); font-size:13px}
+.rng input{grid-column:1 / -1}
+.seg{display:inline-flex; flex-wrap:wrap; border:1px solid var(--line); border-radius:6px; overflow:hidden; background:var(--field); max-width:100%}
+.seg label{position:relative; display:block; margin:0}
+.seg label + label{border-left:1px solid var(--line)}
+.seg input{position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer}
+.seg input:disabled{cursor:not-allowed}
+.seg span{display:block; padding:7px 13px; font-size:14px; font-weight:600; min-width:44px; text-align:center}
+.seg input:checked + span{background:var(--accent); color:var(--accent-fg)}
+.seg input:disabled + span{opacity:.45}
+.seg input:focus-visible + span{outline:2px solid var(--focus); outline-offset:-3px}
+.themes{display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:8px}
+.theme{display:flex; flex-direction:column; gap:6px; align-items:flex-start; text-align:left; font:inherit; font-size:13px; font-weight:600; color:var(--fg); background:var(--field); border:1px solid var(--line); border-radius:6px; padding:8px; cursor:pointer}
+.theme:hover{border-color:var(--muted)}
+.theme i{display:flex; width:100%; height:20px; border-radius:3px; overflow:hidden; border:1px solid rgba(128,128,128,.35)}
+.theme i b{flex:1}
+.drop{display:flex; align-items:center; gap:14px; border:2px dashed var(--line); border-radius:8px; padding:12px; cursor:pointer; background:var(--field); position:relative; min-width:0}
+.drop:hover, .drop.over{border-color:var(--accent)}
+.drop input{position:absolute; width:1px; height:1px; opacity:0; pointer-events:none}
+.drop canvas{width:64px; height:64px; border-radius:50%; flex:none; background:var(--line)}
+.drop canvas.sq{border-radius:8px}
+.drop strong{display:block; font-size:14px}
+.drop small{color:var(--muted); font-size:13px}
+.saved{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px}
+.saved li{display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; border:1px solid var(--line); background:var(--field); border-radius:8px; padding:9px 10px}
+.saved .nm{flex:1 1 140px; min-width:0; font-weight:600; overflow-wrap:anywhere}
+.saved .acts{display:flex; flex-wrap:wrap; gap:6px}
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .stage{position:static}
+  #cv{max-height:70vh}
+}
+@media (max-width:480px){
+  h1{font-size:28px}
+  .two,.three{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+#cv:focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+.selrow{display:flex; flex-wrap:wrap; gap:6px; margin:6px 0}
+.selrow label{cursor:pointer}
+.selrow input{position:absolute; opacity:0}
+.selrow span{display:inline-block; padding:5px 10px; border:1px solid var(--line,#8884); border-radius:999px; font-size:13px}
+.selrow input:checked+span{background:var(--accent); color:#fff; border-color:var(--accent)}
+.selrow input:disabled+span{opacity:.4}
+.selrow input:focus-visible+span{outline:2px solid var(--accent); outline-offset:2px}
+.row2{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Générateur de citations</h1>
+    <p>Écris la citation, surligne les mots forts, dépose une photo, choisis un style et tes couleurs, puis télécharge l’image.</p>
+  </header>
+
+  <div class="app">
+    <section class="stage" aria-label="Aperçu">
+      <div class="screen" id="screen">
+        <canvas id="cv" tabindex="0" width="1500" height="500" role="img" aria-label="Aperçu de la citation"></canvas>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <div class="bar">
+        <label class="f" for="preset"><span>Format</span>
+          <select id="preset" data-k="preset">
+            <option value="x">Bannière X / Facebook, 1500×500</option>
+            <option value="yt">YouTube, bannière 2560×1440</option>
+            <option value="th">YouTube, miniature 1280×720</option>
+            <option value="li">Bannière LinkedIn, 1584×396</option>
+            <option value="sq">Carré Instagram, 1080×1080</option>
+            <option value="po">Portrait 4:5, 1080×1350</option>
+            <option value="st">Story, 1080×1920</option>
+          </select>
+        </label>
+        <div class="f fit"><span class="lbl" id="lblScale">Qualité</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblScale">
+            <label><input type="radio" name="scale" data-k="scale" data-num value="1"><span>Standard</span></label>
+            <label><input type="radio" name="scale" data-k="scale" data-num value="2"><span>HD ×2</span></label>
+          </div>
+        </div>
+        <div class="f fit"><span class="lbl" id="lblFormat">Fichier</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblFormat">
+            <label><input type="radio" name="format" data-k="format" value="png"><span>PNG</span></label>
+            <label><input type="radio" name="format" data-k="format" value="jpeg"><span>JPEG</span></label>
+          </div>
+        </div>
+        <button type="button" class="btn main" id="dl">Télécharger</button>
+      </div>
+      <label class="f inline" style="margin-top:10px"><input type="checkbox" id="guides" data-k="guides"><span>Montrer la zone visible partout pour la bannière YouTube (aperçu seulement)</span></label>
+    </section>
+
+    <div class="panel">
+      <section class="grp" aria-labelledby="g-lay">
+        <h2 id="g-lay">Disposition</h2>
+        <p class="hint">Clique un élément dans l’aperçu (ou ici), puis fais-le glisser où tu veux. Les flèches du clavier le déplacent finement (Maj = plus vite).</p>
+        <div class="selrow" role="radiogroup" aria-label="Élément sélectionné">
+          <label><input type="radio" name="selEl" data-sel value="shape"><span>Fond</span></label>
+          <label><input type="radio" name="selEl" data-sel value="text"><span>Texte</span></label>
+          <label><input type="radio" name="selEl" data-sel value="mark"><span>Symbole</span></label>
+          <label><input type="radio" name="selEl" data-sel value="photo"><span>Photo</span></label>
+          <label><input type="radio" name="selEl" data-sel value="sig"><span>Signature</span></label>
+          <label><input type="radio" name="selEl" data-sel value="cap"><span>Légende</span></label>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="centerX">Centrer ↔</button>
+          <button type="button" class="btn" id="centerY">Centrer ↕</button>
+          <button type="button" class="btn" id="resetSel">Replacer</button>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="centerAll">Centrer tout l’ensemble</button>
+          <button type="button" class="btn" id="resetAll">Tout replacer</button>
+        </div>
+        <label class="f inline" style="margin-top:8px"><input type="checkbox" id="snap" data-k="snap"><span>Aimant au centre (repères roses)</span></label>
+        <label class="f inline"><input type="checkbox" id="cropMode"><span>Déplacer la photo dans son cercle (sinon : la déplacer elle-même). Raccourci : Maj + glisser</span></label>
+      </section>
+
+      <section class="grp" aria-labelledby="g-style">
+        <h2 id="g-style">Style</h2>
+        <div class="seg" role="radiogroup" aria-label="Style de mise en page">
+          <label><input type="radio" name="style" data-k="style" value="classic"><span>Classique</span></label>
+          <label><input type="radio" name="style" data-k="style" value="poster"><span>Affiche</span></label>
+          <label><input type="radio" name="style" data-k="style" value="duo"><span>Duo</span></label>
+          <label><input type="radio" name="style" data-k="style" value="stamp"><span>Tampon</span></label>
+          <label><input type="radio" name="style" data-k="style" value="neon"><span>Néon</span></label>
+        </div>
+        <p class="hint" id="styleHint"></p>
+      </section>
+
+      <section class="grp" aria-labelledby="g-text">
+        <h2 id="g-text">Citation</h2>
+        <label class="f" for="text"><span>Texte</span>
+          <textarea id="text" data-k="text" rows="4"></textarea>
+        </label>
+        <div class="row">
+          <button type="button" class="btn" id="hlAdd">Surligner la sélection</button>
+          <button type="button" class="btn" id="hlClear">Retirer les surlignages</button>
+        </div>
+        <p class="hint">Sélectionne des mots dans la zone de texte, puis clique sur Surligner. Sur une sélection déjà surlignée, le bouton l’enlève. Tu peux aussi taper [[ ]] autour des mots.</p>
+        <div class="two">
+          <label class="f" for="font"><span>Police</span>
+            <select id="font" data-k="font">
+              <option value="anton">Anton, affiche</option>
+              <option value="bebas">Bebas Neue, étroite</option>
+              <option value="archivo">Archivo Black, massive</option>
+              <option value="playfair">Playfair, italique</option>
+            </select>
+          </label>
+          <div class="f"><span class="lbl" id="lblAlign">Alignement</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lblAlign">
+              <label><input type="radio" name="align" data-k="align" value="left"><span>Gauche</span></label>
+              <label><input type="radio" name="align" data-k="align" value="center"><span>Centre</span></label>
+              <label><input type="radio" name="align" data-k="align" value="right"><span>Droite</span></label>
+            </div>
+          </div>
+        </div>
+        <label class="f inline"><input type="checkbox" id="upper" data-k="upper"><span>Tout en majuscules</span></label>
+        <label class="f inline"><input type="checkbox" id="auto" data-k="auto"><span>Ajuster la taille automatiquement</span></label>
+        <label class="f rng" for="size"><span>Taille du texte</span><output data-o="size"></output>
+          <input type="range" id="size" data-k="size" min="20" max="160" step="1">
+        </label>
+      </section>
+
+      <section class="grp" aria-labelledby="g-hl">
+        <h2 id="g-hl">Surlignage</h2>
+        <div class="f"><span class="lbl" id="lblHl">Style du surlignage</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblHl">
+            <label><input type="radio" name="hlStyle" data-k="hlStyle" value="color"><span>Texte coloré</span></label>
+            <label><input type="radio" name="hlStyle" data-k="hlStyle" value="marker"><span>Marqueur</span></label>
+          </div>
+        </div>
+        <label class="f inline"><input type="checkbox" id="hlSame" data-k="hlSame"><span>Couleur automatique, liée à l’accent</span></label>
+        <label class="f" for="hl"><span>Couleur du surlignage</span>
+          <input type="color" id="hl" data-k="hl">
+        </label>
+      </section>
+
+      <section class="grp" aria-labelledby="g-col">
+        <h2 id="g-col">Couleurs</h2>
+        <div class="themes" id="themes" role="group" aria-label="Thèmes prêts à l’emploi"></div>
+        <div class="three">
+          <label class="f" for="bg"><span>Fond</span><input type="color" id="bg" data-k="bg"></label>
+          <label class="f" for="fg"><span>Texte</span><input type="color" id="fg" data-k="fg"></label>
+          <label class="f" for="accent"><span>Accent</span><input type="color" id="accent" data-k="accent"></label>
+        </div>
+        <p class="hint">L’accent colore d’un coup le symbole devant la citation, la bordure et le contour de la photo. Dans les styles Affiche, Duo et Tampon, il colore aussi le grand aplat.</p>
+      </section>
+
+      <section class="grp" aria-labelledby="g-bgimg">
+        <h2 id="g-bgimg">Image de fond</h2>
+        <label class="drop" id="dropBg" for="bgfile">
+          <canvas id="bgthumb" class="sq" width="128" height="128" aria-hidden="true"></canvas>
+          <span><strong>Ajouter une image de fond (facultatif)</strong><small>Désactivé par défaut. Une fois l’image ajoutée, elle s’affiche derrière la citation.</small></span>
+          <input type="file" id="bgfile" accept="image/*">
+        </label>
+        <label class="f inline"><input type="checkbox" id="bgUse" data-k="bgUse"><span>Utiliser l’image de fond</span></label>
+        <label class="f rng" for="bgDim"><span>Voile de la couleur du fond</span><output data-o="bgDim"></output>
+          <input type="range" id="bgDim" data-k="bgDim" min="0" max="0.95" step="0.01">
+        </label>
+        <label class="f inline"><input type="checkbox" id="bgGray" data-k="bgGray"><span>Image en noir et blanc</span></label>
+        <label class="f rng" for="bgZoom"><span>Zoom de l’image</span><output data-o="bgZoom"></output>
+          <input type="range" id="bgZoom" data-k="bgZoom" min="1" max="3" step="0.01">
+        </label>
+        <div class="two">
+          <label class="f rng" for="bgX"><span>Horizontal</span><output data-o="bgX"></output>
+            <input type="range" id="bgX" data-k="bgX" min="0" max="1" step="0.01">
+          </label>
+          <label class="f rng" for="bgY"><span>Vertical</span><output data-o="bgY"></output>
+            <input type="range" id="bgY" data-k="bgY" min="0" max="1" step="0.01">
+          </label>
+        </div>
+        <div class="row"><button type="button" class="btn" id="rmBg">Retirer l’image de fond</button></div>
+      </section>
+
+      <section class="grp" aria-labelledby="g-sym">
+        <h2 id="g-sym">Symbole, bordure, texture</h2>
+        <div class="f"><span class="lbl" id="lblSym">Symbole devant la citation</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblSym">
+            <label><input type="radio" name="symbol" data-k="symbol" value="quote" aria-label="Guillemet anglais"><span>“</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="guillemet" aria-label="Guillemet français"><span>«</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="star" aria-label="Étoile"><span>★</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="bar" aria-label="Barre verticale"><span>▌</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="none"><span>Aucun</span></label>
+          </div>
+        </div>
+        <div class="f"><span class="lbl" id="lblBorder">Bordure</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblBorder">
+            <label><input type="radio" name="border" data-k="border" value="sides"><span>Barres</span></label>
+            <label><input type="radio" name="border" data-k="border" value="frame"><span>Cadre</span></label>
+            <label><input type="radio" name="border" data-k="border" value="none"><span>Aucune</span></label>
+          </div>
+        </div>
+        <label class="f rng" for="borderW"><span>Épaisseur de la bordure</span><output data-o="borderW"></output>
+          <input type="range" id="borderW" data-k="borderW" min="4" max="40" step="1">
+        </label>
+        <div class="f"><span class="lbl" id="lblTex">Texture du fond</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblTex">
+            <label><input type="radio" name="texture" data-k="texture" value="none"><span>Aucune</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="grain"><span>Grain</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="stripes"><span>Hachures</span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="grp" aria-labelledby="g-photo">
+        <h2 id="g-photo">Photo</h2>
+        <label class="drop" id="drop" for="file">
+          <canvas id="thumb" width="128" height="128" aria-hidden="true"></canvas>
+          <span><strong>Dépose une photo ici ou clique pour en choisir une</strong><small>La photo est recadrée dans le cercle. Tu peux aussi la déposer sur l’aperçu.</small></span>
+          <input type="file" id="file" accept="image/*">
+        </label>
+        <label class="f rng" for="zoom"><span>Zoom</span><output data-o="zoom"></output>
+          <input type="range" id="zoom" data-k="zoom" min="1" max="4" step="0.01">
+        </label>
+        <div class="two">
+          <label class="f rng" for="fx"><span>Horizontal</span><output data-o="fx"></output>
+            <input type="range" id="fx" data-k="fx" min="0" max="1" step="0.01">
+          </label>
+          <label class="f rng" for="fy"><span>Vertical</span><output data-o="fy"></output>
+            <input type="range" id="fy" data-k="fy" min="0" max="1" step="0.01">
+          </label>
+        </div>
+        <div class="two">
+          <label class="f rng" for="photoSize"><span>Taille du cercle</span><output data-o="photoSize"></output>
+            <input type="range" id="photoSize" data-k="photoSize" min="110" max="290" step="1">
+          </label>
+          <label class="f rng" for="ring"><span>Contour</span><output data-o="ring"></output>
+            <input type="range" id="ring" data-k="ring" min="0" max="18" step="1">
+          </label>
+        </div>
+        <div class="f"><span class="lbl" id="lblFilter">Rendu de la photo</span>
+          <div class="seg" role="radiogroup" aria-labelledby="lblFilter">
+            <label><input type="radio" name="filter" data-k="filter" value="bw"><span>Noir et blanc</span></label>
+            <label><input type="radio" name="filter" data-k="filter" value="sepia"><span>Sépia</span></label>
+            <label><input type="radio" name="filter" data-k="filter" value="color"><span>Couleur</span></label>
+          </div>
+        </div>
+        <div class="row"><button type="button" class="btn" id="rmPhoto">Retirer la photo</button></div>
+      </section>
+
+      <section class="grp" aria-labelledby="g-sig">
+        <h2 id="g-sig">Signature</h2>
+        <label class="f" for="sig"><span>Nom signé</span>
+          <input type="text" id="sig" data-k="sig" autocomplete="off">
+        </label>
+        <div class="two">
+          <label class="f" for="sigFont"><span>Écriture</span>
+            <select id="sigFont" data-k="sigFont">
+              <option value="delafield">Mrs Saint Delafield</option>
+              <option value="dafoe">Mr Dafoe</option>
+              <option value="yellowtail">Yellowtail</option>
+            </select>
+          </label>
+          <label class="f rng" for="sigSize"><span>Taille</span><output data-o="sigSize"></output>
+            <input type="range" id="sigSize" data-k="sigSize" min="30" max="130" step="1">
+          </label>
+        </div>
+        <label class="f inline"><input type="checkbox" id="sigSame" data-k="sigSame"><span>Couleur automatique, liée au texte</span></label>
+        <label class="f" for="sigColor"><span>Couleur de la signature</span>
+          <input type="color" id="sigColor" data-k="sigColor">
+        </label>
+        <label class="f" for="caption"><span>Légende sous la signature (facultatif)</span>
+          <input type="text" id="caption" data-k="caption" autocomplete="off" placeholder="Une date, un lieu, une source">
+        </label>
+      </section>
+
+      <section class="grp" aria-labelledby="g-saved">
+        <h2 id="g-saved">Mes styles</h2>
+        <p class="hint" id="savedHint">Enregistre tous les réglages sous un nom pour les retrouver en un clic. Les photos et les images de fond ne sont pas enregistrées.</p>
+        <label class="f" for="styleName"><span>Nom du style</span>
+          <input type="text" id="styleName" maxlength="40" autocomplete="off" placeholder="Ex. Bannière rouge de la chaîne">
+        </label>
+        <label class="f inline"><input type="checkbox" id="saveText"><span>Garder aussi la citation, la signature et la légende</span></label>
+        <div class="row">
+          <button type="button" class="btn main" id="saveStyle">Enregistrer ce style</button>
+          <button type="button" class="btn" id="reset">Tout réinitialiser</button>
+        </div>
+        <ul class="saved" id="saved" aria-label="Styles enregistrés"></ul>
+        <p class="hint" id="savedEmpty">Chargement de tes styles…</p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+var $ = function(s, r){ return (r || document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+var clamp = function(v, a, b){ return Math.min(b, Math.max(a, v)); };
+
+var QFONTS = {
+  anton:    { css: '"Anton", Impact, "Arial Narrow", sans-serif', weight: 400, style: 'normal', upper: true,  lh: 1.14 },
+  bebas:    { css: '"Bebas Neue", Impact, "Arial Narrow", sans-serif', weight: 400, style: 'normal', upper: true, lh: 1.08 },
+  archivo:  { css: '"Archivo Black", "Arial Black", Impact, sans-serif', weight: 400, style: 'normal', upper: true, lh: 1.12 },
+  playfair: { css: '"Playfair Display", Georgia, serif', weight: 700, style: 'italic', upper: false, lh: 1.2 }
+};
+var SFONTS = {
+  delafield:  { css: '"Mrs Saint Delafield", cursive', k: 1 },
+  dafoe:      { css: '"Mr Dafoe", cursive', k: 0.78 },
+  yellowtail: { css: '"Yellowtail", cursive', k: 0.7 }
+};
+var PRESETS = {
+  x:  { w: 1500, h: 500 },
+  yt: { w: 2560, h: 1440, safe: { x: 507, y: 508, w: 1546, h: 423 } },
+  th: { w: 1280, h: 720 },
+  li: { w: 1584, h: 396 },
+  sq: { w: 1080, h: 1080 },
+  po: { w: 1080, h: 1350 },
+  st: { w: 1080, h: 1920 }
+};
+var STYLE_HINTS = {
+  classic: 'Fond uni, barres de couleur, symbole devant la citation.',
+  poster: 'Grande bande inclinée de la couleur d’accent derrière la citation, façon affiche constructiviste.',
+  duo: 'Un bloc de couleur à côté de la photo, la citation reste sur le fond.',
+  stamp: 'Citation encadrée et tamponnée à l’encre d’accent, légèrement inclinée et usée.',
+  neon: 'Texte lumineux, à utiliser sur un fond sombre.'
+};
+var THEMES = [
+  { name: 'Rouge et noir', bg: '#14110F', fg: '#F2EBDD', accent: '#D12B1F', hl: '#E8A317' },
+  { name: 'Ambre',         bg: '#1B1610', fg: '#F4E9D0', accent: '#E8A317', hl: '#F2EBDD' },
+  { name: 'Papier',        bg: '#ECE5D5', fg: '#1B1814', accent: '#B3261E', hl: '#1B1814' },
+  { name: 'Bleu nuit',     bg: '#0E1726', fg: '#E8EEF7', accent: '#4F8CFF', hl: '#FFD166' },
+  { name: 'Vert bouteille', bg: '#0F1D17', fg: '#E9EFE6', accent: '#3FB27F', hl: '#F2C94C' },
+  { name: 'Noir et blanc', bg: '#0B0B0B', fg: '#F5F5F5', accent: '#FFFFFF', hl: '#FFFFFF' },
+  { name: 'Néon',          bg: '#0A0612', fg: '#F4EEFF', accent: '#FF2E93', hl: '#2EE6FF' }
+];
+var MARKW = { quote: 150, guillemet: 150, star: 122, bar: 34, none: 0 };
+
+var DEFAULTS = {
+  style: 'classic',
+  text: 'On peut obtenir beaucoup plus avec [[un mot gentil et un revolver]], qu’avec un mot gentil tout seul.',
+  font: 'anton', upper: true, align: 'left', auto: true, size: 64,
+  hlStyle: 'color', hlSame: true, hl: '#E8A317',
+  bg: '#14110F', fg: '#F2EBDD', accent: '#D12B1F',
+  bgUse: false, bgDim: 0.62, bgGray: true, bgZoom: 1, bgX: 0.5, bgY: 0.5,
+  symbol: 'quote', border: 'sides', borderW: 18, texture: 'none',
+  zoom: 1, fx: 0.46, fy: 0.28, photoSize: 190, ring: 5, filter: 'bw',
+  sig: 'Al Capone', sigFont: 'delafield', sigSize: 66, sigSame: true, sigColor: '#F2EBDD', caption: '',
+  preset: 'x', scale: 1, format: 'png', guides: true, snap: true
+};
+var ENUMS = {
+  style: STYLE_HINTS, font: QFONTS, align: { left: 1, center: 1, right: 1 }, hlStyle: { color: 1, marker: 1 },
+  symbol: MARKW, border: { sides: 1, frame: 1, none: 1 }, texture: { none: 1, grain: 1, stripes: 1 },
+  filter: { bw: 1, sepia: 1, color: 1 }, sigFont: SFONTS, preset: PRESETS
+};
+/* réglages liés à une photo précise ou au fichier exporté : jamais enregistrés dans un style */
+var NOT_SAVED = ['zoom', 'fx', 'fy', 'bgX', 'bgY', 'bgZoom', 'bgUse', 'format', 'scale', 'guides', 'snap'];
+var TEXT_KEYS = ['text', 'sig', 'caption'];
+var S = Object.assign({}, DEFAULTS);
+
+var photo = null, bgImg = null;
+var GEO = { photo: null };
+var cv = $('#cv');
+
+/* ---------- couleurs ---------- */
+function rgb(hex){
+  var h = String(hex || '#000000').replace('#', '');
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  var n = parseInt(h, 16);
+  if (isNaN(n)) n = 0;
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(a, b, t){
+  var x = rgb(a), y = rgb(b);
+  return 'rgb(' + Math.round(x[0] + (y[0] - x[0]) * t) + ',' + Math.round(x[1] + (y[1] - x[1]) * t) + ',' + Math.round(x[2] + (y[2] - x[2]) * t) + ')';
+}
+function relLum(hex){
+  var c = rgb(hex).map(function(v){ v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function contrast(a, b){
+  var x = relLum(a), y = relLum(b);
+  return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+}
+/* texte lisible sur une couleur : le texte ou le fond du thème, sinon blanc ou noir */
+function pickText(on){
+  var best = contrast(S.fg, on) >= contrast(S.bg, on) ? S.fg : S.bg;
+  if (contrast(best, on) < 3) best = relLum(on) > 0.4 ? '#111111' : '#FFFFFF';
+  return best;
+}
+
+/* ---------- texte et surlignage ---------- */
+function parseText(raw){
+  var s = S.upper ? raw.toUpperCase() : raw;
+  var paras = [[]];
+  var hl = false, word = null, i = 0;
+  function flush(){ if (word){ paras[paras.length - 1].push(word); word = null; } }
+  while (i < s.length){
+    if (s.substr(i, 2) === '[['){ hl = true; i += 2; continue; }
+    if (s.substr(i, 2) === ']]'){ hl = false; i += 2; continue; }
+    var ch = s.charAt(i);
+    if (ch === '\n'){ flush(); paras.push([]); }
+    else if (/\s/.test(ch)){ flush(); }
+    else {
+      if (!word) word = [];
+      var last = word[word.length - 1];
+      if (last && last.hl === hl) last.t += ch; else word.push({ t: ch, hl: hl });
+    }
+    i++;
+  }
+  flush();
+  return paras;
+}
+function toFlags(raw){
+  var chars = [], map = new Array(raw.length + 1), hl = false, i = 0;
+  while (i < raw.length){
+    map[i] = chars.length;
+    if (raw.substr(i, 2) === '[['){ hl = true; map[i + 1] = chars.length; i += 2; continue; }
+    if (raw.substr(i, 2) === ']]'){ hl = false; map[i + 1] = chars.length; i += 2; continue; }
+    chars.push({ ch: raw.charAt(i), hl: hl });
+    i++;
+  }
+  map[raw.length] = chars.length;
+  return { chars: chars, map: map };
+}
+function fromFlags(chars){
+  var out = '', open = false;
+  chars.forEach(function(c){
+    if (c.hl && !open){ out += '[['; open = true; }
+    if (!c.hl && open){ out += ']]'; open = false; }
+    out += c.ch;
+  });
+  if (open) out += ']]';
+  return out;
+}
+
+function setSpacing(c, size){
+  if ('letterSpacing' in c) c.letterSpacing = (S.upper ? size * 0.012 : 0) + 'px';
+}
+function layoutText(c, paras, fontFn, size, maxW){
+  c.font = fontFn(size);
+  setSpacing(c, size);
+  var space = c.measureText(' ').width;
+  var lines = [], maxWordW = 0;
+  paras.forEach(function(para){
+    if (!para.length){ lines.push({ segs: [], w: 0 }); return; }
+    var cur = { segs: [], w: 0 };
+    para.forEach(function(word){
+      var ww = word.map(function(p){ return { t: p.t, hl: p.hl, w: c.measureText(p.t).width }; });
+      var wlen = ww.reduce(function(a, p){ return a + p.w; }, 0);
+      maxWordW = Math.max(maxWordW, wlen);
+      if (cur.segs.length && cur.w + space + wlen > maxW){ lines.push(cur); cur = { segs: [], w: 0 }; }
+      if (cur.segs.length){ cur.segs.push({ t: ' ', hl: false, w: space, sp: true }); cur.w += space; }
+      ww.forEach(function(p){ cur.segs.push(p); });
+      cur.w += wlen;
+    });
+    lines.push(cur);
+  });
+  return { lines: lines, maxWordW: maxWordW };
+}
+function fitText(c, paras, fontFn, lh, maxW, maxH, lo, hi){
+  function test(sz){
+    var r = layoutText(c, paras, fontFn, sz, maxW);
+    return { lines: r.lines, sz: sz, ok: r.lines.length * sz * lh <= maxH && r.maxWordW <= maxW };
+  }
+  var a = lo, b = Math.max(lo, hi);
+  while (b - a > 0.5){
+    var m = (a + b) / 2;
+    if (test(m).ok) a = m; else b = m;
+  }
+  return test(a);
+}
+function lineX(ln, x0, x1, align){
+  return align === 'left' ? x0 : align === 'right' ? x1 - ln.w : x0 + (x1 - x0 - ln.w) / 2;
+}
+function lineBounds(lines, x0, x1, align){
+  var mn = Infinity, mx = -Infinity;
+  lines.forEach(function(ln){
+    if (!ln.segs.length) return;
+    var x = lineX(ln, x0, x1, align);
+    mn = Math.min(mn, x); mx = Math.max(mx, x + ln.w);
+  });
+  if (mn === Infinity){ mn = x0; mx = x1; }
+  return { x0: mn, x1: mx };
+}
+function drawText(c, lines, fontFn, size, lh, x0, x1, top, align, colors){
+  c.font = fontFn(size);
+  setSpacing(c, size);
+  c.textBaseline = 'alphabetic';
+  c.textAlign = 'left';
+  var lineH = size * lh;
+  var capH = c.measureText('H').actualBoundingBoxAscent || size * 0.72;
+  lines.forEach(function(ln, i){
+    var y = top + i * lineH + lineH / 2 + capH / 2;
+    var px = lineX(ln, x0, x1, align);
+    ln.segs.forEach(function(s){ s.x = px; px += s.w; });
+    ln.segs.forEach(function(s, k){
+      if (s.sp){ var p = ln.segs[k - 1], n = ln.segs[k + 1]; s.hl = !!(p && n && p.hl && n.hl); }
+    });
+    if (S.hlStyle === 'marker'){
+      var start = null, end = 0;
+      var flushRect = function(){
+        if (start !== null){
+          c.fillStyle = colors.hl;
+          var padX = size * 0.14, padT = size * 0.12, padB = size * 0.2;
+          c.fillRect(start - padX, y - capH - padT, end - start + padX * 2, capH + padT + padB);
+          start = null;
+        }
+      };
+      ln.segs.forEach(function(s){
+        if (s.hl){ if (start === null) start = s.x; end = s.x + s.w; } else flushRect();
+      });
+      flushRect();
+    }
+    ln.segs.forEach(function(s){
+      if (s.sp) return;
+      var col = s.hl ? (S.hlStyle === 'marker' ? colors.hlText : colors.hl) : colors.fg;
+      c.fillStyle = col;
+      if (colors.glow){
+        c.shadowColor = col; c.shadowBlur = size * 0.32;
+        c.fillText(s.t, s.x, y);
+        c.fillText(s.t, s.x, y);
+        c.shadowBlur = 0; c.shadowColor = 'transparent';
+      } else {
+        c.fillText(s.t, s.x, y);
+      }
+    });
+  });
+  return capH;
+}
+
+/* ---------- symbole ---------- */
+function drawMark(c, kind, align, x0, x1, topY, u, color, glow){
+  var box = null;
+  c.fillStyle = color;
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  if (glow){ c.shadowColor = color; c.shadowBlur = 22 * u; }
+  function pos(w){ return align === 'left' ? x0 : align === 'right' ? x1 - w : x0 + (x1 - x0 - w) / 2; }
+  if (kind === 'quote' || kind === 'guillemet'){
+    var g = kind === 'quote' ? '“' : '«';
+    c.font = 'italic 700 ' + ((kind === 'quote' ? 320 : 300) * u) + 'px "Playfair Display", Georgia, serif';
+    c.textAlign = 'left';
+    c.textBaseline = 'alphabetic';
+    var m = c.measureText(g);
+    var w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
+    c.fillText(g, pos(w) + m.actualBoundingBoxLeft, topY + m.actualBoundingBoxAscent);
+    box = { x: pos(w), y: topY, w: w, h: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent };
+  } else if (kind === 'star'){
+    var R = 54 * u;
+    var cx = pos(2 * R) + R, cy = topY + R;
+    c.beginPath();
+    for (var i = 0; i < 10; i++){
+      var rr = i % 2 ? R * 0.42 : R;
+      var a = -Math.PI / 2 + i * Math.PI / 5;
+      var px = cx + rr * Math.cos(a), py = cy + rr * Math.sin(a);
+      if (i) c.lineTo(px, py); else c.moveTo(px, py);
+    }
+    c.closePath();
+    c.fill();
+    box = { x: cx - R, y: topY, w: 2 * R, h: 2 * R };
+  }
+  c.shadowBlur = 0; c.shadowColor = 'transparent';
+  return box;
+}
+
+/* ---------- photo ---------- */
+function applyFilter(g, w, filter){
+  var id;
+  try { id = g.getImageData(0, 0, w, w); } catch (e){ return; }
+  var d = id.data;
+  for (var i = 0; i < d.length; i += 4){
+    var v = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+    if (filter === 'bw'){
+      v = (v - 128) * 1.08 + 128;
+      v = v < 0 ? 0 : v > 255 ? 255 : v;
+      d[i] = d[i + 1] = d[i + 2] = v;
+    } else {
+      d[i] = Math.min(255, v * 1.07 + 18);
+      d[i + 1] = Math.min(255, v * 0.92 + 8);
+      d[i + 2] = Math.min(255, v * 0.72);
+    }
+  }
+  g.putImageData(id, 0, 0);
+}
+function photoCanvas(src, d, zoom, fx, fy, filter){
+  var size = Math.max(2, Math.round(d));
+  var off = document.createElement('canvas');
+  off.width = off.height = size;
+  var g = off.getContext('2d');
+  var s = Math.max(size / src.width, size / src.height) * zoom;
+  var dw = src.width * s, dh = src.height * s;
+  g.drawImage(src, -(dw - size) * fx, -(dh - size) * fy, dw, dh);
+  if (filter !== 'color') applyFilter(g, size, filter);
+  return off;
+}
+function drawPhoto(c, cx, cy, D, u, geo, ringColor, glow){
+  var r = D / 2;
+  var ringW = S.ring * u;
+  var ri = ringW > 0.5 ? r - ringW : r;
+  if (ringW > 0.5){
+    c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fillStyle = ringColor;
+    if (glow){ c.shadowColor = ringColor; c.shadowBlur = 24 * u; }
+    c.fill();
+    c.shadowBlur = 0; c.shadowColor = 'transparent';
+  }
+  c.save();
+  c.beginPath(); c.arc(cx, cy, ri, 0, Math.PI * 2); c.clip();
+  if (photo){
+    var off = photoCanvas(photo, ri * 2, S.zoom, S.fx, S.fy, S.filter);
+    c.drawImage(off, cx - ri, cy - ri, ri * 2, ri * 2);
+  } else {
+    c.fillStyle = mix(S.bg, S.fg, 0.12); c.fillRect(cx - ri, cy - ri, ri * 2, ri * 2);
+    c.fillStyle = mix(S.bg, S.fg, 0.3);
+    c.beginPath(); c.arc(cx, cy - ri * 0.15, ri * 0.28, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(cx, cy + ri * 0.88, ri * 0.62, ri * 0.5, 0, 0, Math.PI * 2); c.fill();
+  }
+  c.restore();
+  geo.photo = { cx: cx, cy: cy, r: r, ri: ri };
+}
+
+/* ---------- signature ---------- */
+function sigLayout(c, maxW, base){
+  var sf = SFONTS[S.sigFont];
+  var size = S.sigSize * sf.k * base;
+  c.font = '400 ' + size + 'px ' + sf.css;
+  if ('letterSpacing' in c) c.letterSpacing = '0px';
+  var w = c.measureText(S.sig).width;
+  if (w > maxW && w > 0){
+    size *= maxW / w;
+    c.font = '400 ' + size + 'px ' + sf.css;
+    w = c.measureText(S.sig).width;
+  }
+  return { size: size, w: w, font: c.font };
+}
+
+/* ---------- textures ---------- */
+var NOISE = null, ERODE = null;
+function noiseCanvas(){
+  if (NOISE) return NOISE;
+  NOISE = document.createElement('canvas');
+  NOISE.width = NOISE.height = 256;
+  var g = NOISE.getContext('2d');
+  var id = g.createImageData(256, 256), d = id.data;
+  for (var i = 0; i < d.length; i += 4){
+    var v = Math.random() < 0.5 ? 0 : 255;
+    d[i] = d[i + 1] = d[i + 2] = v;
+    d[i + 3] = Math.random() * 46;
+  }
+  g.putImageData(id, 0, 0);
+  return NOISE;
+}
+function erodeCanvas(){
+  if (ERODE) return ERODE;
+  ERODE = document.createElement('canvas');
+  ERODE.width = ERODE.height = 220;
+  var g = ERODE.getContext('2d');
+  g.fillStyle = '#000';
+  for (var i = 0; i < 520; i++){
+    g.globalAlpha = 0.35 + Math.random() * 0.65;
+    g.beginPath();
+    g.arc(Math.random() * 220, Math.random() * 220, 0.6 + Math.random() * 2.4, 0, Math.PI * 2);
+    g.fill();
+  }
+  for (var j = 0; j < 40; j++){
+    g.globalAlpha = 0.5;
+    g.fillRect(Math.random() * 220, Math.random() * 220, 6 + Math.random() * 26, 1 + Math.random() * 1.5);
+  }
+  return ERODE;
+}
+function roundRect(g, x, y, w, h, r){
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+function rotated(g, px, py, ang, fn){
+  g.save(); g.translate(px, py); g.rotate(ang); g.translate(-px, -py);
+  fn(g);
+  g.restore();
+}
+
+/* ---------- rendu ---------- */
+var ELEMS = ['shape', 'text', 'mark', 'photo', 'sig', 'cap'];
+var ELEM_NAMES = { shape: 'Fond', text: 'Texte', mark: 'Symbole', photo: 'Photo', sig: 'Signature', cap: 'Légende' };
+var OFF = {};
+function resetOffsets(){ ELEMS.forEach(function(k){ OFF[k] = { x: 0, y: 0 }; }); }
+resetOffsets();
+var sel = null;
+var GUIDE = { v: false, h: false };
+
+function rotBox(b, px, py, a){
+  var cs = Math.cos(a), sn = Math.sin(a);
+  var pts = [[b.x, b.y], [b.x + b.w, b.y], [b.x + b.w, b.y + b.h], [b.x, b.y + b.h]].map(function(p){
+    var dx = p[0] - px, dy = p[1] - py;
+    return [px + dx * cs - dy * sn, py + dx * sn + dy * cs];
+  });
+  var xs = pts.map(function(p){ return p[0]; }), ys = pts.map(function(p){ return p[1]; });
+  var x0 = Math.min.apply(null, xs), y0 = Math.min.apply(null, ys);
+  return { x: x0, y: y0, w: Math.max.apply(null, xs) - x0, h: Math.max.apply(null, ys) - y0 };
+}
+
+function render(canvas, P, k, preview){
+  var CW = P.w * k, CH = P.h * k;
+  canvas.width = CW; canvas.height = CH;
+  var c = canvas.getContext('2d');
+  var R = P.safe ? { x: P.safe.x * k, y: P.safe.y * k, w: P.safe.w * k, h: P.safe.h * k } : { x: 0, y: 0, w: CW, h: CH };
+  var W = R.w, H = R.h;
+  var layout = W / H >= 2.5 ? 'wide' : W / H >= 1.3 ? 'split' : 'stack';
+  var u = layout === 'wide' ? H / 500 : layout === 'split' ? H / 540 : W / 1000;
+  var st = S.style;
+  var neon = st === 'neon';
+  var ang = st === 'poster' ? -0.055 : st === 'stamp' ? -0.045 : 0;
+  var q = QFONTS[S.font];
+  var fontFn = function(sz){ return (q.style === 'italic' ? 'italic ' : '') + q.weight + ' ' + sz + 'px ' + q.css; };
+  var geo = { photo: null, boxes: {}, region: R };
+  var paras = parseText(S.text);
+  var hasSig = S.sig.trim().length > 0;
+  var hasCap = S.caption.trim().length > 0;
+
+  /* couleurs selon le style */
+  var onAccent = pickText(S.accent);
+  var other = function(col){ return col === S.fg ? S.bg : S.fg; };
+  var textColor = S.fg, markColor = S.accent, ringColor = S.accent;
+  var hlColor = S.hlSame ? S.accent : S.hl;
+  var sigColor = S.sigSame ? S.fg : S.sigColor;
+  var capColor = mix(S.bg, S.fg, 0.68);
+  if (st === 'poster'){
+    textColor = onAccent; markColor = other(onAccent);
+    if (S.hlSame) hlColor = other(onAccent);
+  } else if (st === 'stamp'){
+    textColor = S.accent; markColor = S.accent;
+    if (S.hlSame) hlColor = S.fg;
+  } else if (st === 'duo'){
+    ringColor = onAccent;
+    if (S.sigSame) sigColor = onAccent;
+    capColor = mix(S.accent, onAccent, 0.82);
+  }
+  var colors = { fg: textColor, hl: hlColor, hlText: pickText(hlColor), glow: neon };
+
+  /* fond : couleur, image, voile, texture */
+  c.fillStyle = S.bg; c.fillRect(0, 0, CW, CH);
+  if (S.bgUse && bgImg){
+    var bs = Math.max(CW / bgImg.width, CH / bgImg.height) * S.bgZoom;
+    var bdw = bgImg.width * bs, bdh = bgImg.height * bs;
+    c.drawImage(bgImg, -(bdw - CW) * S.bgX, -(bdh - CH) * S.bgY, bdw, bdh);
+    if (S.bgGray){
+      c.save(); c.globalCompositeOperation = 'saturation'; c.fillStyle = '#808080'; c.fillRect(0, 0, CW, CH); c.restore();
+    }
+    c.save(); c.globalAlpha = S.bgDim; c.fillStyle = S.bg; c.fillRect(0, 0, CW, CH); c.restore();
+  }
+  var gu = Math.max(0.6, CW / 1500);
+  if (S.texture === 'grain'){
+    c.save();
+    var pat = c.createPattern(noiseCanvas(), 'repeat');
+    try { pat.setTransform(new DOMMatrix().scale(gu)); } catch (e) {}
+    c.fillStyle = pat; c.fillRect(0, 0, CW, CH);
+    c.restore();
+  } else if (S.texture === 'stripes'){
+    c.save();
+    c.strokeStyle = S.fg; c.globalAlpha = 0.05; c.lineWidth = 2 * gu;
+    for (var hx = -CH; hx < CW + CH; hx += 16 * gu){
+      c.beginPath(); c.moveTo(hx, CH); c.lineTo(hx + CH, 0); c.stroke();
+    }
+    c.restore();
+  }
+
+  c.save();
+  c.translate(R.x, R.y);
+
+  /* positions manuelles : chaque élément suit son parent (fond > texte > symbole, photo > signature > légende) */
+  var duo = st === 'duo';
+  var duoRect = null;
+  var carriesText = st === 'poster' || st === 'stamp';
+  var carriesPhoto = duo;
+  var so = OFF.shape;
+  var Sh = { x: so.x * W, y: so.y * H };
+  var T = { x: ((carriesText ? so.x : 0) + OFF.text.x) * W, y: ((carriesText ? so.y : 0) + OFF.text.y) * H };
+  var M = { x: T.x + OFF.mark.x * W, y: T.y + OFF.mark.y * H };
+  var Ph = { x: ((carriesPhoto ? so.x : 0) + OFF.photo.x) * W, y: ((carriesPhoto ? so.y : 0) + OFF.photo.y) * H };
+  var Sg = { x: Ph.x + OFF.sig.x * W, y: Ph.y + OFF.sig.y * H };
+  var Cp = { x: Sg.x + OFF.cap.x * W, y: Sg.y + OFF.cap.y * H };
+  var boxes = geo.boxes;
+
+  function drawBorder(){
+    var bw = S.borderW * u;
+    c.fillStyle = S.accent;
+    if (neon){ c.shadowColor = S.accent; c.shadowBlur = 18 * u; }
+    if (S.border === 'sides'){
+      c.fillRect(0, 0, bw, H);
+      c.fillRect(0, H - bw / 3, W, bw / 3);
+    } else if (S.border === 'frame'){
+      var lw = Math.max(2, bw / 2), inset = 26 * u;
+      c.strokeStyle = S.accent; c.lineWidth = lw;
+      c.strokeRect(inset + lw / 2, inset + lw / 2, W - 2 * inset - lw, H - 2 * inset - lw);
+    }
+    c.shadowBlur = 0; c.shadowColor = 'transparent';
+  }
+
+  function fit(maxW, maxH, hi){
+    if (S.auto) return fitText(c, paras, fontFn, q.lh, maxW, maxH, 12 * u, hi);
+    var sz = S.size * u;
+    return { lines: layoutText(c, paras, fontFn, sz, maxW).lines, sz: sz };
+  }
+  function capOf(sz){
+    c.font = fontFn(sz);
+    return c.measureText('H').actualBoundingBoxAscent || sz * 0.72;
+  }
+  function drawSigBlock(cx, baseY, maxW, base, o){
+    var sg = sigLayout(c, maxW, base);
+    var sx = clamp(cx, sg.w / 2 + 12 * u, W - sg.w / 2 - 12 * u) + o.x;
+    var by = baseY + o.y;
+    c.fillStyle = sigColor;
+    c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    c.font = sg.font;
+    if ('letterSpacing' in c) c.letterSpacing = '0px';
+    if (neon){ c.shadowColor = sigColor; c.shadowBlur = 14 * u; }
+    c.fillText(S.sig, sx, by + sg.size * 0.72);
+    c.shadowBlur = 0; c.shadowColor = 'transparent';
+    boxes.sig = { kind: 'rect', x: sx - sg.w / 2, y: by, w: sg.w, h: sg.size * 1.05 };
+    return { size: sg.size, sx: sx };
+  }
+  function drawCaption(cx, baseY, base, o){
+    var cs = 22 * base;
+    c.font = '600 ' + cs + 'px "Archivo", system-ui, sans-serif';
+    if ('letterSpacing' in c) c.letterSpacing = (2 * base) + 'px';
+    c.fillStyle = capColor;
+    c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    var t = S.caption.trim().toUpperCase();
+    var w = c.measureText(t).width;
+    var sx = clamp(cx, w / 2 + 12 * u, W - w / 2 - 12 * u) + o.x;
+    var by = baseY + o.y;
+    c.fillText(t, sx, by + cs);
+    if ('letterSpacing' in c) c.letterSpacing = '0px';
+    boxes.cap = { kind: 'rect', x: sx - w / 2, y: by, w: w, h: cs * 1.3 };
+  }
+  function placePhoto(cx, cy, D){
+    drawPhoto(c, cx + Ph.x, cy + Ph.y, D, u, geo, ringColor, neon);
+    boxes.photo = { kind: 'circle', cx: geo.photo.cx, cy: geo.photo.cy, r: geo.photo.r };
+  }
+
+  /* groupe citation : fond (bande, cadre), texte, symbole */
+  var G = null;
+  function paintShape(g){
+    if (st === 'poster'){
+      var sk = G.skew;
+      g.fillStyle = S.accent;
+      g.beginPath();
+      g.moveTo(G.bx0, G.by0); g.lineTo(G.bx1 + sk, G.by0); g.lineTo(G.bx1 - sk, G.by1); g.lineTo(G.bx0, G.by1);
+      g.closePath(); g.fill();
+      g.fillStyle = S.fg;
+      g.beginPath();
+      g.moveTo(G.bx0, G.by1 + 16 * u); g.lineTo(G.bx1 - sk + 5 * u, G.by1 + 16 * u);
+      g.lineTo(G.bx1 - sk + 1 * u, G.by1 + 24 * u); g.lineTo(G.bx0, G.by1 + 24 * u);
+      g.closePath(); g.fill();
+    } else if (st === 'stamp'){
+      g.strokeStyle = S.accent;
+      g.lineWidth = 9 * u; roundRect(g, G.fx0, G.fy0, G.fx1 - G.fx0, G.fy1 - G.fy0, 16 * u); g.stroke();
+      g.lineWidth = 3 * u; roundRect(g, G.fx0 + 17 * u, G.fy0 + 17 * u, G.fx1 - G.fx0 - 34 * u, G.fy1 - G.fy0 - 34 * u, 8 * u); g.stroke();
+    }
+  }
+  function paintText(g){
+    drawText(g, G.res.lines, fontFn, G.res.sz, q.lh, G.tx0, G.tx1, G.textTop, S.align, colors);
+  }
+  function paintMark(g){
+    G.markBox = null;
+    if (G.bar){
+      g.fillStyle = markColor;
+      if (neon){ g.shadowColor = markColor; g.shadowBlur = 20 * u; }
+      g.fillRect(G.bar.x, G.bar.y, G.bar.w, G.bar.h);
+      g.shadowBlur = 0; g.shadowColor = 'transparent';
+      G.markBox = { x: G.bar.x, y: G.bar.y, w: G.bar.w, h: G.bar.h };
+    } else if (G.mark){
+      G.markBox = drawMark(g, S.symbol, G.mark.align, G.mark.x0, G.mark.x1, G.mark.y, u, markColor, neon);
+    }
+  }
+  function layer(g, o, fn){
+    g.save(); g.translate(o.x, o.y);
+    rotated(g, G.px, G.py, ang, fn);
+    g.restore();
+  }
+  function tr(b, o){
+    var r = ang ? rotBox(b, G.px, G.py, ang) : b;
+    return { kind: 'rect', x: r.x + o.x, y: r.y + o.y, w: r.w, h: r.h };
+  }
+  function paintStyled(){
+    var target = c, off = null;
+    if (st === 'stamp'){
+      off = document.createElement('canvas');
+      off.width = Math.max(1, Math.round(W)); off.height = Math.max(1, Math.round(H));
+      target = off.getContext('2d');
+    }
+    if (carriesText) layer(target, Sh, paintShape);
+    layer(target, T, paintText);
+    layer(target, M, paintMark);
+    if (off){
+      target.globalCompositeOperation = 'destination-out';
+      var ep = target.createPattern(erodeCanvas(), 'repeat');
+      try { ep.setTransform(new DOMMatrix().scale(Math.max(0.7, u * 1.2))); } catch (e) {}
+      target.fillStyle = ep; target.fillRect(0, 0, off.width, off.height);
+      c.drawImage(off, 0, 0);
+    }
+    boxes.text = tr(G.textBox, T);
+    if (G.markBox) boxes.mark = tr(G.markBox, M);
+    if (st === 'poster'){
+      var bx0 = Math.max(0, G.bx0);
+      boxes.shape = tr({ x: bx0, y: G.by0, w: Math.min(W, G.bx1 + G.skew) - bx0, h: G.by1 + 24 * u - G.by0 }, Sh);
+    } else if (st === 'stamp'){
+      boxes.shape = tr({ x: G.fx0, y: G.fy0, w: G.fx1 - G.fx0, h: G.fy1 - G.fy0 }, Sh);
+    }
+  }
+  function drawDuo(){
+    if (!duoRect) return;
+    c.fillStyle = S.accent;
+    c.fillRect(duoRect.x + Sh.x, duoRect.y + Sh.y, duoRect.w, duoRect.h);
+    boxes.shape = { kind: 'rect', x: duoRect.x + Sh.x, y: duoRect.y + Sh.y, w: duoRect.w, h: duoRect.h };
+  }
+
+  if (layout === 'wide' || layout === 'split'){
+    var isWide = layout === 'wide';
+    var padL = (S.border === 'sides' ? S.borderW + 66 : 84) * u;
+    var padR = (isWide ? 96 : 70) * u;
+    var gap = (isWide ? 36 : 44) * u;
+    var D = S.photoSize * (isWide ? 1 : 1.5) * u;
+    var colW = Math.max(D + (isWide ? 30 : 40) * u, (isWide ? 230 : 276) * u);
+    var rightInset = duo ? 40 * u : padR;
+    var cx = W - rightInset - colW / 2;
+    if (duo) duoRect = { x: cx - colW / 2 - 40 * u, y: 0, w: W - (cx - colW / 2 - 40 * u), h: H };
+    var markW = isWide ? MARKW[S.symbol] * u : (S.symbol === 'bar' ? 34 * u : 0);
+    var markH = (!isWide && (S.symbol === 'quote' || S.symbol === 'guillemet' || S.symbol === 'star')) ? 100 * u : 0;
+    var markGap = markH ? 12 * u : 0;
+    var tx0 = padL + markW + (markW ? (isWide ? gap : gap / 2) : 0);
+    var tx1 = cx - colW / 2 - gap;
+    var res = fit(tx1 - tx0, H - 100 * u - markH - markGap, (isWide ? 130 : 190) * u);
+    var lineH = res.sz * q.lh;
+    var Ht = res.lines.length * lineH;
+    var groupH = markH + markGap + Ht;
+    var gy = (H - groupH) / 2;
+    var textTop = gy + markH + markGap;
+    var capH = capOf(res.sz);
+    var lb = lineBounds(res.lines, tx0, tx1, S.align);
+    G = { res: res, tx0: tx0, tx1: tx1, textTop: textTop, mark: null, bar: null, markBox: null };
+    G.textBox = { x: lb.x0 - 8 * u, y: textTop - 6 * u, w: lb.x1 - lb.x0 + 16 * u, h: Ht + 12 * u };
+    if (S.symbol === 'bar'){
+      G.bar = { x: padL, y: textTop, w: 14 * u, h: Ht };
+    } else if (S.symbol !== 'none'){
+      G.mark = isWide
+        ? { align: 'left', x0: padL, x1: padL + markW, y: textTop + (lineH - capH) / 2 }
+        : { align: S.align, x0: tx0, x1: tx1, y: gy };
+    }
+    G.bx0 = -W * 0.2; G.bx1 = tx1 + 40 * u; G.by0 = H * 0.07; G.by1 = H * 0.93; G.skew = 34 * u;
+    G.fx0 = (isWide && markW ? padL : lb.x0) - 34 * u; G.fx1 = lb.x1 + 34 * u;
+    G.fy0 = gy - 34 * u; G.fy1 = gy + groupH + 34 * u;
+    G.px = st === 'poster' ? W * 0.4 : (G.fx0 + G.fx1) / 2;
+    G.py = st === 'poster' ? H / 2 : (G.fy0 + G.fy1) / 2;
+
+    drawDuo();
+    drawBorder();
+    paintStyled();
+
+    var sgSize = hasSig ? sigLayout(c, colW + 60 * u, u).size : 0;
+    var total = D + (hasSig ? 16 * u + sgSize * 0.95 : 0) + (hasCap ? 10 * u + 28 * u : 0);
+    var y0 = (H - total) / 2;
+    placePhoto(cx, y0 + D / 2, D);
+    var y = y0 + D;
+    if (hasSig){
+      y += 16 * u;
+      drawSigBlock(cx, y, colW + 60 * u, u, Sg);
+      y += sgSize * 0.95;
+    }
+    if (hasCap){ y += 10 * u; drawCaption(cx, y, u, Cp); }
+  } else {
+    var pL = (S.border === 'sides' ? S.borderW + 62 : 84) * u, pR = 84 * u;
+    var Ds = S.photoSize * 1.25 * u;
+    var pcx = S.align === 'left' ? pL + Ds / 2 : S.align === 'right' ? W - pR - Ds / 2 : (pL + W - pR) / 2;
+    var yy = 80 * u;
+    var photoCy = yy + Ds / 2;
+    yy += Ds;
+    var sgl = null, sigY = 0, capY = 0;
+    if (hasSig){
+      yy += 18 * u;
+      sigY = yy;
+      sgl = sigLayout(c, W - pL - pR, 1.15 * u);
+      yy += sgl.size * 0.95;
+    }
+    if (hasCap){ yy += 10 * u; capY = yy; yy += 30 * u; }
+    var headBottom = yy + 30 * u;
+    if (duo) duoRect = { x: 0, y: 0, w: W, h: headBottom };
+    yy += 40 * u;
+    var regTop = yy;
+    var regBot = H - (S.border === 'sides' ? S.borderW / 3 : 0) * u - 70 * u;
+    var mH = (S.symbol === 'quote' || S.symbol === 'guillemet' || S.symbol === 'star') ? 110 * u : 0;
+    var mGap = mH ? 14 * u : 0;
+    var barW = S.symbol === 'bar' ? 34 * u : 0;
+    var sx0 = pL + barW, sx1 = W - pR;
+    var rs = fit(sx1 - sx0, Math.max(60 * u, regBot - regTop - mH - mGap), 150 * u);
+    var Hs = rs.lines.length * rs.sz * q.lh;
+    var gH = mH + mGap + Hs;
+    var gy2 = regTop + Math.max(0, (regBot - regTop - gH) / 2);
+    var lb2 = lineBounds(rs.lines, sx0, sx1, S.align);
+    G = { res: rs, tx0: sx0, tx1: sx1, textTop: gy2 + mH + mGap, mark: null, bar: null, markBox: null };
+    G.textBox = { x: lb2.x0 - 8 * u, y: gy2 + mH + mGap - 6 * u, w: lb2.x1 - lb2.x0 + 16 * u, h: Hs + 12 * u };
+    if (S.symbol === 'bar'){
+      G.bar = { x: pL, y: gy2, w: 14 * u, h: Hs };
+    } else if (mH){
+      G.mark = { align: S.align, x0: pL, x1: W - pR, y: gy2 };
+    }
+    G.bx0 = -W * 0.2; G.bx1 = W * 1.2; G.skew = 0;
+    G.by0 = Math.max(gy2 - 72 * u, regTop - 24 * u); G.by1 = Math.min(gy2 + gH + 72 * u, H - 40 * u);
+    G.fx0 = Math.min(lb2.x0, pL) - 34 * u; G.fx1 = lb2.x1 + 34 * u;
+    G.fy0 = gy2 - 34 * u; G.fy1 = gy2 + gH + 34 * u;
+    G.px = st === 'poster' ? W / 2 : (G.fx0 + G.fx1) / 2;
+    G.py = st === 'poster' ? (G.by0 + G.by1) / 2 : (G.fy0 + G.fy1) / 2;
+
+    drawDuo();
+    drawBorder();
+    paintStyled();
+
+    placePhoto(pcx, photoCy, Ds);
+    if (hasSig) drawSigBlock(pcx, sigY, W - pL - pR, 1.15 * u, Sg);
+    if (hasCap) drawCaption(clamp(pcx, pL, W - pR), capY, 1.1 * u, Cp);
+  }
+  c.restore();
+
+  /* les repères sont en pixels du canevas entier */
+  Object.keys(boxes).forEach(function(key){
+    var b = boxes[key];
+    if (b.kind === 'circle'){ b.cx += R.x; b.cy += R.y; }
+    else { b.x += R.x; b.y += R.y; }
+  });
+  if (geo.photo){ geo.photo.cx += R.x; geo.photo.cy += R.y; }
+
+  /* repères d'aperçu : zone visible YouTube, élément sélectionné, aimant (jamais exportés) */
+  if (preview){
+    var lw2 = Math.max(2, CW / 700);
+    var fs = Math.max(13, CW / 100);
+    if (P.safe && S.guides){
+      c.save();
+      c.setLineDash([lw2 * 5, lw2 * 3]);
+      c.lineWidth = lw2 * 2; c.strokeStyle = '#000000'; c.strokeRect(R.x, R.y, R.w, R.h);
+      c.lineWidth = lw2; c.strokeStyle = '#FFFFFF'; c.strokeRect(R.x, R.y, R.w, R.h);
+      c.setLineDash([]);
+      c.font = '600 ' + fs + 'px "Archivo", system-ui, sans-serif';
+      c.textAlign = 'left'; c.textBaseline = 'bottom';
+      var label = 'Zone visible sur tous les écrans';
+      var tw = c.measureText(label).width;
+      c.fillStyle = 'rgba(0,0,0,.65)'; c.fillRect(R.x, R.y - fs * 1.6, tw + fs, fs * 1.6);
+      c.fillStyle = '#FFFFFF'; c.fillText(label, R.x + fs / 2, R.y - fs * 0.3);
+      c.restore();
+    }
+    if (sel && boxes[sel]){
+      var sb = boxes[sel];
+      c.save();
+      c.setLineDash([lw2 * 4, lw2 * 3]);
+      [['#000000', lw2 * 2.4], ['#FFFFFF', lw2]].forEach(function(ln){
+        c.strokeStyle = ln[0]; c.lineWidth = ln[1];
+        if (sb.kind === 'circle'){ c.beginPath(); c.arc(sb.cx, sb.cy, sb.r + lw2 * 3, 0, Math.PI * 2); c.stroke(); }
+        else c.strokeRect(sb.x - lw2 * 3, sb.y - lw2 * 3, sb.w + lw2 * 6, sb.h + lw2 * 6);
+      });
+      c.setLineDash([]);
+      var lx = sb.kind === 'circle' ? sb.cx - sb.r : sb.x - lw2 * 3;
+      var ly = sb.kind === 'circle' ? sb.cy - sb.r - lw2 * 3 : sb.y - lw2 * 3;
+      c.font = '700 ' + fs + 'px "Archivo", system-ui, sans-serif';
+      c.textAlign = 'left'; c.textBaseline = 'bottom';
+      var nm = ELEM_NAMES[sel];
+      var nw = c.measureText(nm).width;
+      var tag = Math.max(fs * 1.5, ly);
+      c.fillStyle = '#FFFFFF'; c.fillRect(lx, tag - fs * 1.5, nw + fs, fs * 1.5);
+      c.fillStyle = '#000000'; c.fillText(nm, lx + fs / 2, tag - fs * 0.25);
+      c.restore();
+    }
+    if (GUIDE.v || GUIDE.h){
+      c.save();
+      c.strokeStyle = '#FF2E93'; c.lineWidth = lw2;
+      if (GUIDE.v){ c.beginPath(); c.moveTo(R.x + R.w / 2, 0); c.lineTo(R.x + R.w / 2, CH); c.stroke(); }
+      if (GUIDE.h){ c.beginPath(); c.moveTo(0, R.y + R.h / 2); c.lineTo(CW, R.y + R.h / 2); c.stroke(); }
+      c.restore();
+    }
+  }
+  return geo;
+}
+
+var raf = 0;
+function schedule(){
+  if (raf) return;
+  raf = requestAnimationFrame(function(){ raf = 0; draw(); });
+}
+function draw(){
+  var P = PRESETS[S.preset] || PRESETS.x;
+  GEO = render(cv, P, 1, true);
+  cv.setAttribute('aria-label', 'Aperçu de la citation : ' + S.text.replace(/\[\[|\]\]/g, ''));
+}
+
+/* ---------- interface ---------- */
+var FMT = {
+  zoom: function(v){ return '×' + (+v).toFixed(2); },
+  bgZoom: function(v){ return '×' + (+v).toFixed(2); },
+  fx: function(v){ return Math.round(v * 100) + ' %'; },
+  fy: function(v){ return Math.round(v * 100) + ' %'; },
+  bgX: function(v){ return Math.round(v * 100) + ' %'; },
+  bgY: function(v){ return Math.round(v * 100) + ' %'; },
+  bgDim: function(v){ return Math.round(v * 100) + ' %'; },
+  size: function(v){ return v + ' px'; }
+};
+function syncUI(){
+  $$('[data-k]').forEach(function(el){
+    var k = el.dataset.k, v = S[k];
+    if (el.type === 'checkbox') el.checked = !!v;
+    else if (el.type === 'radio') el.checked = String(v) === el.value;
+    else if (String(el.value) !== String(v)) el.value = v;
+  });
+  $$('[data-o]').forEach(function(o){
+    var k = o.dataset.o;
+    o.textContent = FMT[k] ? FMT[k](S[k]) : S[k];
+  });
+  $('#size').disabled = S.auto;
+  $('#hl').disabled = S.hlSame;
+  $('#sigColor').disabled = S.sigSame;
+  $('#borderW').disabled = S.border === 'none';
+  ['zoom', 'fx', 'fy', 'filter'].forEach(function(id){
+    $$('[data-k="' + id + '"]').forEach(function(el){ el.disabled = !photo; });
+  });
+  ['bgUse', 'bgDim', 'bgGray', 'bgZoom', 'bgX', 'bgY'].forEach(function(id){
+    $$('[data-k="' + id + '"]').forEach(function(el){ el.disabled = !bgImg; });
+  });
+  $('#rmPhoto').disabled = !photo;
+  $('#rmBg').disabled = !bgImg;
+  $$('[data-k="scale"]').forEach(function(el){ el.disabled = S.preset === 'yt'; });
+  $('#guides').disabled = S.preset !== 'yt';
+  $('#styleHint').textContent = STYLE_HINTS[S.style] || '';
+  if (typeof syncLayoutButtons === 'function') syncLayoutButtons();
+}
+function onCtl(e){
+  var el = e.target;
+  var k = el.dataset ? el.dataset.k : null;
+  if (!k) return;
+  var v;
+  if (el.type === 'checkbox') v = el.checked;
+  else if (el.type === 'radio'){ if (!el.checked) return; v = el.value; }
+  else if (el.type === 'range') v = parseFloat(el.value);
+  else v = el.value;
+  if (el.dataset.num !== undefined) v = parseFloat(v);
+  S[k] = v;
+  if (k === 'font') S.upper = QFONTS[v].upper;
+  if (k === 'preset'){ resetOffsets(); sel = null; }
+  syncUI();
+  schedule();
+}
+document.addEventListener('input', onCtl);
+document.addEventListener('change', onCtl);
+
+var statusEl = $('#status'), statusTimer = 0;
+var IDLE = 'Astuce : clique un élément pour le déplacer où tu veux. Maj + glisser sur la photo = recadrer, molette = zoomer.';
+statusEl.textContent = IDLE;
+function say(msg){
+  statusEl.textContent = msg;
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(function(){ statusEl.textContent = IDLE; }, 7000);
+}
+
+THEMES.forEach(function(t){
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'theme';
+  b.setAttribute('aria-label', 'Thème ' + t.name);
+  var sw = document.createElement('i');
+  [t.bg, t.fg, t.accent].forEach(function(col){
+    var s = document.createElement('b'); s.style.background = col; sw.appendChild(s);
+  });
+  b.appendChild(sw);
+  b.appendChild(document.createTextNode(t.name));
+  b.addEventListener('click', function(){
+    S.bg = t.bg; S.fg = t.fg; S.accent = t.accent; S.hl = t.hl;
+    S.sigColor = t.fg;
+    syncUI(); schedule();
+  });
+  $('#themes').appendChild(b);
+});
+
+/* surlignage */
+$('#hlAdd').addEventListener('click', function(){
+  var ta = $('#text');
+  var a = ta.selectionStart, b = ta.selectionEnd;
+  if (a === b){ say('Sélectionne d’abord des mots dans la citation, puis clique sur Surligner.'); return; }
+  var f = toFlags(ta.value);
+  var lo = f.map[a], hi = f.map[b];
+  while (lo < hi && /\s/.test(f.chars[lo].ch)) lo++;
+  while (hi > lo && /\s/.test(f.chars[hi - 1].ch)) hi--;
+  if (lo >= hi){ say('La sélection ne contient aucun mot.'); return; }
+  var all = true;
+  for (var i = lo; i < hi; i++){ if (!f.chars[i].hl && !/\s/.test(f.chars[i].ch)) all = false; }
+  for (var j = lo; j < hi; j++) f.chars[j].hl = !all;
+  ta.value = fromFlags(f.chars);
+  S.text = ta.value;
+  schedule();
+  say(all ? 'Surlignage retiré.' : 'Surlignage ajouté.');
+});
+$('#hlClear').addEventListener('click', function(){
+  var ta = $('#text');
+  ta.value = ta.value.replace(/\[\[|\]\]/g, '');
+  S.text = ta.value;
+  schedule();
+  say('Tous les surlignages sont retirés.');
+});
+
+/* images : photo ronde et image de fond */
+function drawThumbTo(id, src, fyAnchor){
+  var t = $(id), g = t.getContext('2d');
+  g.clearRect(0, 0, t.width, t.height);
+  if (!src) return;
+  var s = Math.max(t.width / src.width, t.height / src.height);
+  var w = src.width * s, h = src.height * s;
+  g.drawImage(src, (t.width - w) * 0.5, (t.height - h) * fyAnchor, w, h);
+}
+function toWorkCanvas(img, max){
+  var w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  var k = Math.min(1, max / Math.max(w, h));
+  var off = document.createElement('canvas');
+  off.width = Math.max(1, Math.round(w * k));
+  off.height = Math.max(1, Math.round(h * k));
+  off.getContext('2d').drawImage(img, 0, 0, off.width, off.height);
+  return off;
+}
+function setPhoto(img){
+  photo = toWorkCanvas(img, 1800);
+  drawThumbTo('#thumb', photo, 0.3);
+}
+function setBg(img){
+  bgImg = toWorkCanvas(img, 2800);
+  drawThumbTo('#bgthumb', bgImg, 0.5);
+}
+function readImage(file, done){
+  if (!file) return;
+  if (!/^image\//.test(file.type)){ say('Ce fichier n’est pas une image. Choisis un JPG, un PNG ou un WebP.'); return; }
+  var url = URL.createObjectURL(file);
+  var img = new Image();
+  img.onload = function(){ URL.revokeObjectURL(url); done(img); };
+  img.onerror = function(){ URL.revokeObjectURL(url); say('Impossible de lire cette image.'); };
+  img.src = url;
+}
+function loadPhotoFile(file){
+  readImage(file, function(img){
+    setPhoto(img);
+    S.zoom = 1; S.fx = 0.5; S.fy = 0.3;
+    syncUI(); schedule();
+    say('Photo ajoutée. Fais-la glisser dans le cercle pour la recadrer.');
+  });
+}
+function loadBgFile(file){
+  readImage(file, function(img){
+    setBg(img);
+    S.bgUse = true; S.bgZoom = 1; S.bgX = 0.5; S.bgY = 0.5;
+    syncUI(); schedule();
+    say('Image de fond ajoutée. Règle le voile pour garder la citation lisible.');
+  });
+}
+function loadDefaultPhoto(){
+  var img = new Image();
+  img.onload = function(){ setPhoto(img); syncUI(); schedule(); };
+  img.onerror = function(){ photo = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule(); };
+  img.src = 'portrait.jpg';
+}
+$('#file').addEventListener('change', function(e){
+  loadPhotoFile(e.target.files && e.target.files[0]);
+  e.target.value = '';
+});
+$('#bgfile').addEventListener('change', function(e){
+  loadBgFile(e.target.files && e.target.files[0]);
+  e.target.value = '';
+});
+$('#rmPhoto').addEventListener('click', function(){
+  photo = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule();
+  say('Photo retirée.');
+});
+$('#rmBg').addEventListener('click', function(){
+  bgImg = null; S.bgUse = false; drawThumbTo('#bgthumb', null, 0); syncUI(); schedule();
+  say('Image de fond retirée.');
+});
+function wireDrop(el, handler){
+  ['dragenter', 'dragover'].forEach(function(n){
+    el.addEventListener(n, function(e){ e.preventDefault(); el.classList.add('over'); });
+  });
+  ['dragleave', 'drop'].forEach(function(n){
+    el.addEventListener(n, function(e){ e.preventDefault(); el.classList.remove('over'); });
+  });
+  el.addEventListener('drop', function(e){
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    handler(f);
+  });
+}
+wireDrop($('#drop'), loadPhotoFile);
+wireDrop($('#screen'), loadPhotoFile);
+wireDrop($('#dropBg'), loadBgFile);
+
+/* sélection et déplacement des éléments dans l'aperçu */
+var drag = null, cropMode = false;
+function toCanvas(e){
+  var r = cv.getBoundingClientRect();
+  return { x: (e.clientX - r.left) * cv.width / r.width, y: (e.clientY - r.top) * cv.height / r.height };
+}
+function scaleOf(){
+  var r = cv.getBoundingClientRect();
+  return r.width ? cv.width / r.width : 1;
+}
+function centerOf(b){
+  return b.kind === 'circle' ? { x: b.cx, y: b.cy } : { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+}
+function hitTest(p){
+  var pad = 8 * scaleOf();
+  var order = ['cap', 'sig', 'photo', 'mark', 'text', 'shape'];
+  for (var i = 0; i < order.length; i++){
+    var b = GEO.boxes && GEO.boxes[order[i]];
+    if (!b) continue;
+    if (b.kind === 'circle'){
+      var dx = p.x - b.cx, dy = p.y - b.cy, rr = b.r + pad;
+      if (dx * dx + dy * dy <= rr * rr) return order[i];
+    } else if (p.x >= b.x - pad && p.x <= b.x + b.w + pad && p.y >= b.y - pad && p.y <= b.y + b.h + pad){
+      return order[i];
+    }
+  }
+  return null;
+}
+function syncLayoutButtons(){
+  var shapeOk = S.style === 'poster' || S.style === 'stamp' || S.style === 'duo';
+  if (sel === 'shape' && !shapeOk) sel = null;
+  $$('[data-sel]').forEach(function(el){
+    el.checked = el.value === sel;
+    if (el.value === 'shape') el.disabled = !shapeOk;
+  });
+  ['centerX', 'centerY', 'resetSel'].forEach(function(id){ $('#' + id).disabled = !sel; });
+}
+function selectEl(key){
+  sel = key;
+  syncLayoutButtons();
+  schedule();
+}
+$$('[data-sel]').forEach(function(el){
+  el.addEventListener('change', function(){ if (el.checked) selectEl(el.value); });
+});
+
+cv.addEventListener('pointerdown', function(e){
+  var p = toCanvas(e);
+  var key = hitTest(p);
+  var mode = null;
+  if (key === 'photo' && photo && (cropMode || e.shiftKey || e.altKey)) mode = 'crop';
+  else if (key) mode = 'move';
+  else if (S.bgUse && bgImg) mode = 'bg';
+  selectEl(key);
+  cv.focus({ preventScroll: true });
+  if (!mode) return;
+  var b = key ? GEO.boxes[key] : null;
+  drag = { mode: mode, key: key, x: p.x, y: p.y, o0: key ? { x: OFF[key].x, y: OFF[key].y } : null, c0: b ? centerOf(b) : null };
+  try { cv.setPointerCapture(e.pointerId); } catch (err) {}
+  cv.style.cursor = 'grabbing';
+  e.preventDefault();
+});
+cv.addEventListener('pointermove', function(e){
+  var p = toCanvas(e);
+  if (!drag){
+    var k = hitTest(p);
+    cv.style.cursor = k ? (k === 'photo' && photo && (cropMode || e.shiftKey || e.altKey) ? 'grab' : 'move') : (S.bgUse && bgImg ? 'grab' : 'default');
+    return;
+  }
+  if (drag.mode === 'move'){
+    var R = GEO.region, dx = p.x - drag.x, dy = p.y - drag.y;
+    var nx = drag.o0.x + dx / R.w, ny = drag.o0.y + dy / R.h;
+    GUIDE.v = false; GUIDE.h = false;
+    if (S.snap){
+      var thr = 10 * scaleOf();
+      var cx = drag.c0.x + dx, cy = drag.c0.y + dy;
+      var mx = R.x + R.w / 2, my = R.y + R.h / 2;
+      if (Math.abs(cx - mx) < thr){ nx += (mx - cx) / R.w; GUIDE.v = true; }
+      if (Math.abs(cy - my) < thr){ ny += (my - cy) / R.h; GUIDE.h = true; }
+    }
+    OFF[drag.key].x = nx; OFF[drag.key].y = ny;
+  } else if (drag.mode === 'crop'){
+    var g = GEO.photo, d = 2 * g.ri;
+    var s = Math.max(d / photo.width, d / photo.height) * S.zoom;
+    var dw = photo.width * s, dh = photo.height * s;
+    if (dw - d > 1) S.fx = clamp(S.fx - (p.x - drag.x) / (dw - d), 0, 1);
+    if (dh - d > 1) S.fy = clamp(S.fy - (p.y - drag.y) / (dh - d), 0, 1);
+    drag.x = p.x; drag.y = p.y;
+    syncUI();
+  } else {
+    var bs = Math.max(cv.width / bgImg.width, cv.height / bgImg.height) * S.bgZoom;
+    var bw = bgImg.width * bs, bh = bgImg.height * bs;
+    if (bw - cv.width > 1) S.bgX = clamp(S.bgX - (p.x - drag.x) / (bw - cv.width), 0, 1);
+    if (bh - cv.height > 1) S.bgY = clamp(S.bgY - (p.y - drag.y) / (bh - cv.height), 0, 1);
+    drag.x = p.x; drag.y = p.y;
+    syncUI();
+  }
+  schedule();
+});
+function endDrag(){
+  drag = null; GUIDE.v = false; GUIDE.h = false;
+  cv.style.cursor = 'default';
+  schedule();
+}
+cv.addEventListener('pointerup', endDrag);
+cv.addEventListener('pointercancel', endDrag);
+cv.addEventListener('wheel', function(e){
+  if (photo && hitTest(toCanvas(e)) === 'photo'){
+    e.preventDefault();
+    S.zoom = clamp(S.zoom * Math.exp(-e.deltaY * 0.0015), 1, 4);
+    syncUI(); schedule();
+  }
+}, { passive: false });
+cv.addEventListener('keydown', function(e){
+  if (e.key === 'Escape'){ selectEl(null); return; }
+  var dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+  if (!dir || !sel || !GEO.region) return;
+  e.preventDefault();
+  var step = Math.max(1, cv.width / 1500) * (e.shiftKey ? 10 : 1);
+  OFF[sel].x += dir[0] * step / GEO.region.w;
+  OFF[sel].y += dir[1] * step / GEO.region.h;
+  schedule();
+});
+
+/* boutons de disposition */
+function centerSel(axis){
+  if (!sel || !GEO.boxes[sel] || !GEO.region) return;
+  var R = GEO.region, c = centerOf(GEO.boxes[sel]);
+  if (axis === 'x') OFF[sel].x += (R.x + R.w / 2 - c.x) / R.w;
+  else OFF[sel].y += (R.y + R.h / 2 - c.y) / R.h;
+  schedule();
+}
+function centerAll(){
+  var R = GEO.region, bx = GEO.boxes;
+  if (!R || !bx) return;
+  var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  ['text', 'mark', 'photo', 'sig', 'cap'].forEach(function(key){
+    var b = bx[key];
+    if (!b) return;
+    var r = b.kind === 'circle' ? { x: b.cx - b.r, y: b.cy - b.r, w: 2 * b.r, h: 2 * b.r } : b;
+    x0 = Math.min(x0, r.x); y0 = Math.min(y0, r.y); x1 = Math.max(x1, r.x + r.w); y1 = Math.max(y1, r.y + r.h);
+  });
+  if (x0 === Infinity) return;
+  var dx = (R.x + R.w / 2) - (x0 + x1) / 2, dy = (R.y + R.h / 2) - (y0 + y1) / 2;
+  var carriers = [(S.style === 'poster' || S.style === 'stamp') ? 'shape' : 'text', S.style === 'duo' ? 'shape' : 'photo'];
+  carriers.filter(function(v, i){ return carriers.indexOf(v) === i; }).forEach(function(key){
+    OFF[key].x += dx / R.w; OFF[key].y += dy / R.h;
+  });
+  schedule();
+  say('Ensemble centré dans l’image.');
+}
+$('#centerX').addEventListener('click', function(){ centerSel('x'); });
+$('#centerY').addEventListener('click', function(){ centerSel('y'); });
+$('#centerAll').addEventListener('click', centerAll);
+$('#resetSel').addEventListener('click', function(){
+  if (!sel) return;
+  OFF[sel] = { x: 0, y: 0 };
+  schedule();
+  say(ELEM_NAMES[sel] + ' replacé à sa position d’origine.');
+});
+$('#resetAll').addEventListener('click', function(){
+  resetOffsets();
+  schedule();
+  say('Tous les éléments sont replacés.');
+});
+$('#cropMode').addEventListener('change', function(e){ cropMode = e.target.checked; });
+
+/* export */
+function slug(t){
+  return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+var dlBtn = $('#dl');
+dlBtn.addEventListener('click', async function(){
+  var P = PRESETS[S.preset] || PRESETS.x;
+  var k = S.preset === 'yt' ? 1 : S.scale;
+  var jpeg = S.format === 'jpeg';
+  var off = document.createElement('canvas');
+  var blob = null;
+  dlBtn.disabled = true;
+  try {
+    render(off, P, k, false);
+    blob = await new Promise(function(res){ off.toBlob(res, jpeg ? 'image/jpeg' : 'image/png', 0.92); });
+  } catch (err){
+    say('Une image bloque l’export. Dépose-la à nouveau depuis ton ordinateur.');
+    dlBtn.disabled = false;
+    return;
+  }
+  if (!blob){ say('Impossible de générer l’image.'); dlBtn.disabled = false; return; }
+  var dl = null;
+  try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (err2){ dl = null; }
+  if (!dl){
+    say('Le téléchargement direct n’est pas disponible ici. Fais un clic droit sur l’aperçu, puis « Enregistrer l’image sous ».');
+    dlBtn.disabled = false;
+    return;
+  }
+  var name = 'citation' + (slug(S.sig) ? '-' + slug(S.sig) : '') + (S.preset === 'yt' ? '-banniere-youtube' : S.preset === 'th' ? '-miniature-youtube' : '') + (jpeg ? '.jpg' : '.png');
+  try {
+    await dl.save({ filename: name, data: blob });
+    var mo = blob.size / 1048576;
+    var msg = 'Image enregistrée (' + off.width + ' × ' + off.height + ' px, ' + mo.toFixed(1).replace('.', ',') + ' Mo).';
+    if (S.preset === 'yt' && mo > 6) msg += ' YouTube limite la bannière à 6 Mo : choisis JPEG.';
+    if (S.preset === 'th' && mo > 2) msg += ' YouTube limite la miniature à 2 Mo : choisis JPEG.';
+    say(msg);
+  } catch (err3){
+    var code = err3 && err3.code;
+    if (code === 'declined') say('Téléchargement annulé.');
+    else if (code === 'rate_limited') say('Une demande est déjà en cours. Réessaie dans un instant.');
+    else if (code === 'too_large') say('L’image est trop lourde. Choisis JPEG ou la qualité Standard.');
+    else say('Le téléchargement a échoué. Fais un clic droit sur l’aperçu pour enregistrer l’image.');
+  }
+  dlBtn.disabled = false;
+});
+
+/* ---------- styles enregistrés ---------- */
+function snapshot(includeText){
+  var o = {};
+  Object.keys(DEFAULTS).forEach(function(key){
+    if (NOT_SAVED.indexOf(key) >= 0) return;
+    if (!includeText && TEXT_KEYS.indexOf(key) >= 0) return;
+    o[key] = S[key];
+  });
+  return o;
+}
+function applySettings(o){
+  Object.keys(o || {}).forEach(function(key){
+    if (!(key in DEFAULTS) || NOT_SAVED.indexOf(key) >= 0) return;
+    var v = o[key], d = DEFAULTS[key];
+    if (typeof v !== typeof d) return;
+    if (ENUMS[key] && !(v in ENUMS[key])) return;
+    if (typeof d === 'number'){
+      if (!isFinite(v)) return;
+      var el = document.querySelector('[data-k="' + key + '"]');
+      if (el && el.min !== '' && el.max !== '') v = clamp(v, parseFloat(el.min), parseFloat(el.max));
+    }
+    if (typeof d === 'string' && /^#/.test(d) && !/^#[0-9a-fA-F]{6}$/.test(v)) return;
+    if (typeof d === 'string' && TEXT_KEYS.indexOf(key) >= 0 && v.length > 2000) return;
+    S[key] = v;
+  });
+  syncUI(); schedule();
+}
+
+var store = { mode: 'none', items: [], col: null, ready: false };
+var LS_KEY = 'citation-styles-v1';
+function lsRead(){
+  try { var raw = localStorage.getItem(LS_KEY); var a = raw ? JSON.parse(raw) : []; return Array.isArray(a) ? a : []; } catch (e){ return null; }
+}
+function lsWrite(items){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(items)); return true; } catch (e){ return false; }
+}
+function sortItems(a){ return a.slice().sort(function(x, y){ return (y.at || 0) - (x.at || 0); }); }
+
+var pendingDelete = null;
+function renderSaved(){
+  var ul = $('#saved'), empty = $('#savedEmpty');
+  ul.textContent = '';
+  var items = sortItems(store.items);
+  if (store.mode === 'none'){
+    empty.hidden = false;
+    empty.textContent = 'L’enregistrement n’est pas disponible dans cette vue.';
+    $('#saveStyle').disabled = true;
+    return;
+  }
+  $('#saveStyle').disabled = false;
+  empty.hidden = items.length > 0;
+  empty.textContent = 'Aucun style enregistré pour l’instant.';
+  items.forEach(function(it){
+    var li = document.createElement('li');
+    var nm = document.createElement('span');
+    nm.className = 'nm';
+    nm.textContent = it.name;
+    li.appendChild(nm);
+    var acts = document.createElement('span');
+    acts.className = 'acts';
+    function btn(label, cls, fn){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn sm' + (cls ? ' ' + cls : ''); b.textContent = label;
+      b.addEventListener('click', fn);
+      acts.appendChild(b);
+      return b;
+    }
+    btn('Appliquer', '', function(){ applySettings(it.settings); say('Style « ' + it.name + ' » appliqué.'); });
+    btn('Mettre à jour', '', function(){
+      saveItem(it.name, $('#saveText').checked || hasText(it.settings), it.id);
+    });
+    var del = pendingDelete === it.id;
+    btn(del ? 'Confirmer la suppression' : 'Supprimer', 'warn', function(){
+      if (pendingDelete !== it.id){ pendingDelete = it.id; renderSaved(); return; }
+      pendingDelete = null;
+      removeItem(it);
+    });
+    li.appendChild(acts);
+    ul.appendChild(li);
+  });
+}
+function hasText(settings){ return !!(settings && ('text' in settings)); }
+function storageNote(){
+  if (store.mode === 'db') $('#savedHint').textContent = 'Enregistre tous les réglages sous un nom pour les retrouver en un clic, sur tous tes appareils. Les photos et les images de fond ne sont pas enregistrées.';
+  else if (store.mode === 'local') $('#savedHint').textContent = 'Enregistre tous les réglages sous un nom pour les retrouver en un clic. Ils restent dans ce navigateur. Les photos et les images de fond ne sont pas enregistrées.';
+}
+async function saveItem(name, includeText, existingId){
+  var settings = snapshot(includeText);
+  var lower = name.toLowerCase();
+  var found = null;
+  store.items.forEach(function(it){ if (it.id === existingId || (!existingId && it.name.toLowerCase() === lower)) found = it; });
+  var now = Date.now();
+  try {
+    if (store.mode === 'db'){
+      var ref = found ? store.col.doc(found.id) : store.col.doc();
+      await ref.set({ name: name, settings: settings, at: now });
+    } else if (store.mode === 'local'){
+      var list = (lsRead() || []).filter(function(it){ return !found || it.id !== found.id; });
+      list.push({ id: found ? found.id : 's' + now, name: name, settings: settings, at: now });
+      if (!lsWrite(list)) throw new Error('local');
+      store.items = list; renderSaved();
+    } else { return; }
+    say(found ? 'Style « ' + name + ' » mis à jour.' : 'Style « ' + name + ' » enregistré.');
+  } catch (err){
+    if (err && err.code === 'quota_exceeded') say('Tu as atteint la limite de styles enregistrés. Supprime-en un.');
+    else say('L’enregistrement a échoué. Réessaie dans un instant.');
+  }
+}
+async function removeItem(it){
+  try {
+    if (store.mode === 'db'){ await store.col.doc(it.id).delete(); }
+    else if (store.mode === 'local'){
+      var list = (lsRead() || []).filter(function(x){ return x.id !== it.id; });
+      lsWrite(list); store.items = list; renderSaved();
+    }
+    say('Style « ' + it.name + ' » supprimé.');
+  } catch (err){
+    say('La suppression a échoué. Réessaie dans un instant.');
+  }
+}
+$('#saveStyle').addEventListener('click', function(){
+  var name = $('#styleName').value.trim();
+  if (!name){ say('Donne d’abord un nom à ton style.'); $('#styleName').focus(); return; }
+  saveItem(name, $('#saveText').checked, null);
+});
+$('#styleName').addEventListener('keydown', function(e){
+  if (e.key === 'Enter'){ e.preventDefault(); $('#saveStyle').click(); }
+});
+
+function startLocalStore(){
+  var list = lsRead();
+  if (list === null){ store.mode = 'none'; store.items = []; }
+  else { store.mode = 'local'; store.items = list; }
+  store.ready = true;
+  storageNote();
+  renderSaved();
+}
+async function initStore(){
+  try {
+    var api = window.claude && window.claude.use ? window.claude : null;
+    if (api){
+      var user = await api.use('user');
+      var db = await api.use('db');
+      var uid = user ? await user.id() : null;
+      if (db && uid){
+        store.mode = 'db';
+        store.col = db.doc('data/users/' + uid + '/profile').collection('styles');
+        store.ready = true;
+        storageNote();
+        store.col.onSnapshot(function(snap){
+          store.items = snap.docs.map(function(d){
+            var v = d.data() || {};
+            return { id: d.id, name: String(v.name || 'Sans nom'), settings: v.settings || {}, at: v.at || 0 };
+          });
+          renderSaved();
+        }, function(){ startLocalStore(); });
+        return;
+      }
+    }
+  } catch (e) {}
+  startLocalStore();
+}
+
+$('#reset').addEventListener('click', function(){
+  Object.assign(S, DEFAULTS);
+  resetOffsets(); sel = null;
+  bgImg = null; drawThumbTo('#bgthumb', null, 0);
+  syncUI();
+  loadDefaultPhoto();
+  schedule();
+  say('Réglages d’origine rétablis.');
+});
+
+/* démarrage */
+syncUI();
+draw();
+loadDefaultPhoto();
+initStore();
+var specs = ['400 40px "Anton"', '400 40px "Bebas Neue"', '400 40px "Archivo Black"', 'italic 700 40px "Playfair Display"',
+  '400 40px "Mrs Saint Delafield"', '400 40px "Mr Dafoe"', '400 40px "Yellowtail"', '600 20px "Archivo"'];
+if (document.fonts && document.fonts.load){
+  Promise.all(specs.map(function(f){ return document.fonts.load(f, 'AaÉéçÀ“«’'); }))
+    .then(schedule, schedule);
+}
+})();
+</script>
+
+</body></html>
