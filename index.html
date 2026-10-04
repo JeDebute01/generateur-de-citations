@@ -2322,7 +2322,7 @@ function showSaveBox(url, name, w, h){
   var im = document.createElement('img'); im.src = url; im.style.cssText = 'max-width:100%;max-height:60vh;object-fit:contain;border:1px solid #ddd';
   var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px';
   var a = document.createElement('a'); a.href = url; a.download = name; a.textContent = 'Télécharger'; a.style.cssText = 'background:#c8281e;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:600';
-  var b = document.createElement('button'); b.type = 'button'; b.textContent = 'Fermer'; b.style.cssText = 'padding:8px 14px;border-radius:8px;border:1px solid #bbb;background:#f4f4f4;cursor:pointer';
+  var b = document.createElement('button'); b.type = 'button'; b.textContent = 'Fermer'; b.style.cssText = 'padding:8px 14px;border-radius:8px;border:1px solid #bbb;background:#f4f4f4;color:#111;cursor:pointer;font:inherit;font-weight:600';
   b.onclick = function(){ d.remove(); };
   row.appendChild(a); row.appendChild(b); c.appendChild(t); c.appendChild(im); c.appendChild(row); d.appendChild(c);
   d.addEventListener('click', function(e){ if (e.target === d) d.remove(); });
@@ -2351,8 +2351,11 @@ dlBtn.addEventListener('click', async function(){
   if (!dl){
     var url = URL.createObjectURL(blob);
     try { var a0 = document.createElement('a'); a0.href = url; a0.download = name; document.body.appendChild(a0); a0.click(); a0.remove(); } catch (e0){}
-    showSaveBox(url, name, off.width, off.height);
-    say('Si le téléchargement ne démarre pas, utilise le bouton ou le clic droit dans la fenêtre qui s’ouvre.');
+    var lk = document.getElementById('saveLink');
+    if (!lk){ lk = document.createElement('button'); lk.type = 'button'; lk.id = 'saveLink'; lk.style.cssText = 'margin-left:10px;background:none;border:0;padding:0;color:#c8281e;text-decoration:underline;cursor:pointer;font:inherit;font-size:13px'; dlBtn.insertAdjacentElement('afterend', lk); }
+    lk.textContent = 'Rien ne s’est téléchargé ? Afficher l’image';
+    lk.onclick = function(){ showSaveBox(url, name, off.width, off.height); };
+    say('Image générée (' + off.width + ' × ' + off.height + ' px).');
     dlBtn.disabled = false;
     return;
   }
