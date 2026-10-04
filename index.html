@@ -2,7 +2,7 @@
 <title>Générateur de citations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700&family=Archivo+Black&family=Bebas+Neue&family=Mr+Dafoe&family=Mrs+Saint+Delafield&family=Playfair+Display:ital,wght@1,700&family=Yellowtail&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;700&family=Archivo+Black&family=Bebas+Neue&family=Mr+Dafoe&family=Mrs+Saint+Delafield&family=Playfair+Display:ital,wght@1,700&family=Yellowtail&family=Oswald:wght@600&family=Abril+Fatface&family=Special+Elite&family=Permanent+Marker&family=Alfa+Slab+One&family=Black+Ops+One&family=Cormorant+Garamond:ital,wght@1,600&family=Libre+Baskerville:ital,wght@1,700&family=Great+Vibes&family=Sacramento&family=Satisfy&family=Caveat&family=Homemade+Apple&display=swap">
 <style>
 /* Mise en page : aperçu fixe à gauche, réglages groupés à droite, une colonne sur téléphone */
 :root{
@@ -124,6 +124,11 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
 .selrow input:disabled+span{opacity:.4}
 .selrow input:focus-visible+span{outline:2px solid var(--accent); outline-offset:2px}
 .row2{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+.fmtbar{display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px}
+.fmtbar .btn{min-width:38px; min-height:36px; padding:6px 10px}
+.fmtbar .sep{width:1px; height:24px; background:var(--line); margin:0 2px}
+.fmtbar input[type=color]{width:42px; height:36px; flex:none}
+[hidden]{display:none !important}
 </style>
 
 <div class="wrap">
@@ -141,13 +146,29 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
       <div class="bar">
         <label class="f" for="preset"><span>Format</span>
           <select id="preset" data-k="preset">
-            <option value="x">Bannière X / Facebook, 1500×500</option>
-            <option value="yt">YouTube, bannière 2560×1440</option>
-            <option value="th">YouTube, miniature 1280×720</option>
-            <option value="li">Bannière LinkedIn, 1584×396</option>
-            <option value="sq">Carré Instagram, 1080×1080</option>
-            <option value="po">Portrait 4:5, 1080×1350</option>
-            <option value="st">Story, 1080×1920</option>
+            <optgroup label="Facebook">
+              <option value="fb">Couverture de page, 851×315</option>
+              <option value="fp">Post / lien, 1200×630</option>
+            </optgroup>
+            <optgroup label="X (Twitter)">
+              <option value="x">Bannière de profil, 1500×500</option>
+              <option value="xp">Image de post, 1200×675</option>
+            </optgroup>
+            <optgroup label="YouTube">
+              <option value="yt">Bannière de chaîne, 2560×1440</option>
+              <option value="th">Miniature, 1280×720</option>
+            </optgroup>
+            <optgroup label="LinkedIn">
+              <option value="li">Bannière de profil, 1584×396</option>
+              <option value="lc">Couverture d’entreprise, 4200×700</option>
+              <option value="lp">Post, 1200×627</option>
+            </optgroup>
+            <optgroup label="Instagram, Facebook, Pinterest">
+              <option value="sq">Carré, 1080×1080</option>
+              <option value="po">Portrait 4:5, 1080×1350</option>
+              <option value="st">Story / Reel / Short, 1080×1920</option>
+              <option value="pi">Pin Pinterest, 1000×1500</option>
+            </optgroup>
           </select>
         </label>
         <div class="f fit"><span class="lbl" id="lblScale">Qualité</span>
@@ -164,13 +185,13 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
         </div>
         <button type="button" class="btn main" id="dl">Télécharger</button>
       </div>
-      <label class="f inline" style="margin-top:10px"><input type="checkbox" id="guides" data-k="guides"><span>Montrer la zone visible partout pour la bannière YouTube (aperçu seulement)</span></label>
+      <label class="f inline" style="margin-top:10px"><input type="checkbox" id="guides" data-k="guides"><span>Montrer la zone visible / sûre pour ce format (aperçu seulement, quand elle existe)</span></label>
     </section>
 
     <div class="panel">
       <section class="grp" aria-labelledby="g-lay">
         <h2 id="g-lay">Disposition</h2>
-        <p class="hint">Clique un élément dans l’aperçu (ou ici), puis fais-le glisser où tu veux. Les flèches du clavier le déplacent finement (Maj = plus vite).</p>
+        <p class="hint">Clique un élément dans l’aperçu (ou ici), puis fais-le glisser où tu veux. Les flèches du clavier le déplacent d’un pixel à la fois (Maj = 10 pixels), tant qu’il est en pointillés.</p>
         <div class="selrow" role="radiogroup" aria-label="Élément sélectionné">
           <label><input type="radio" name="selEl" data-sel value="shape"><span>Fond</span></label>
           <label><input type="radio" name="selEl" data-sel value="text"><span>Texte</span></label>
@@ -178,6 +199,9 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
           <label><input type="radio" name="selEl" data-sel value="photo"><span>Photo</span></label>
           <label><input type="radio" name="selEl" data-sel value="sig"><span>Signature</span></label>
           <label><input type="radio" name="selEl" data-sel value="cap"><span>Légende</span></label>
+        </div>
+        <div class="row2">
+          <button type="button" class="btn" id="selAll">Tout sélectionner</button>
         </div>
         <div class="row2">
           <button type="button" class="btn" id="centerX">Centrer ↔</button>
@@ -188,7 +212,8 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
           <button type="button" class="btn" id="centerAll">Centrer tout l’ensemble</button>
           <button type="button" class="btn" id="resetAll">Tout replacer</button>
         </div>
-        <label class="f inline" style="margin-top:8px"><input type="checkbox" id="snap" data-k="snap"><span>Aimant au centre (repères roses)</span></label>
+        <label class="f inline" style="margin-top:8px"><input type="checkbox" id="follow" data-k="follow"><span>Déplacer ensemble : texte + symbole, photo + signature + légende</span></label>
+        <label class="f inline"><input type="checkbox" id="snap" data-k="snap"><span>Aimant au centre (repères roses)</span></label>
         <label class="f inline"><input type="checkbox" id="cropMode"><span>Déplacer la photo dans son cercle (sinon : la déplacer elle-même). Raccourci : Maj + glisser</span></label>
       </section>
 
@@ -206,6 +231,20 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
 
       <section class="grp" aria-labelledby="g-text">
         <h2 id="g-text">Citation</h2>
+        <div class="fmtbar" role="toolbar" aria-label="Mise en forme du texte">
+          <button type="button" class="btn" data-fmt="b" title="Gras (Ctrl+B)" aria-label="Gras"><b>G</b></button>
+          <button type="button" class="btn" data-fmt="i" title="Italique (Ctrl+I)" aria-label="Italique"><i>I</i></button>
+          <button type="button" class="btn" data-fmt="u" title="Souligné (Ctrl+U)" aria-label="Souligné"><u>S</u></button>
+          <button type="button" class="btn" data-fmt="s" title="Barré" aria-label="Barré"><s>B</s></button>
+          <span class="sep" aria-hidden="true"></span>
+          <button type="button" class="btn" data-fmt="big" title="Texte plus grand" aria-label="Plus grand">A+</button>
+          <button type="button" class="btn" data-fmt="small" title="Texte plus petit" aria-label="Plus petit">A−</button>
+          <span class="sep" aria-hidden="true"></span>
+          <input type="color" id="fmtColor" value="#E8A317" aria-label="Couleur à appliquer">
+          <button type="button" class="btn" data-fmt="color" title="Colorer la sélection">Colorer</button>
+          <span class="sep" aria-hidden="true"></span>
+          <button type="button" class="btn" data-fmt="clear" title="Retirer gras, italique, souligné, taille et couleur">Effacer les formats</button>
+        </div>
         <label class="f" for="text"><span>Texte</span>
           <textarea id="text" data-k="text" rows="4"></textarea>
         </label>
@@ -214,6 +253,17 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
           <button type="button" class="btn" id="hlClear">Retirer les surlignages</button>
         </div>
         <p class="hint">Sélectionne des mots dans la zone de texte, puis clique sur Surligner. Sur une sélection déjà surlignée, le bouton l’enlève. Tu peux aussi taper [[ ]] autour des mots.</p>
+        <p class="hint">Sans sélection, le format s’applique à toute la citation. Raccourcis dans la zone de texte : Ctrl+B, Ctrl+I, Ctrl+U.</p>
+        <label class="f inline"><input type="checkbox" id="tshadow" data-k="tshadow"><span>Ombre portée sous le texte</span></label>
+        <label class="f inline"><input type="checkbox" id="upper" data-k="upper"><span>Tout en majuscules</span></label>
+        <div class="two">
+          <label class="f rng" for="lhx"><span>Interligne</span><output data-o="lhx"></output>
+            <input type="range" id="lhx" data-k="lhx" min="0.7" max="1.6" step="0.02">
+          </label>
+          <label class="f rng" for="track"><span>Espacement des lettres</span><output data-o="track"></output>
+            <input type="range" id="track" data-k="track" min="-3" max="15" step="0.5">
+          </label>
+        </div>
         <div class="two">
           <label class="f" for="font"><span>Police</span>
             <select id="font" data-k="font">
@@ -221,6 +271,14 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
               <option value="bebas">Bebas Neue, étroite</option>
               <option value="archivo">Archivo Black, massive</option>
               <option value="playfair">Playfair, italique</option>
+              <option value="oswald">Oswald, condensée</option>
+              <option value="alfa">Alfa Slab, empattement épais</option>
+              <option value="blackops">Black Ops, pochoir militaire</option>
+              <option value="marker">Marker, feutre à la main</option>
+              <option value="abril">Abril Fatface, élégante</option>
+              <option value="baskerv">Baskerville, italique classique</option>
+              <option value="cormo">Cormorant, italique fine</option>
+              <option value="typewr">Machine à écrire</option>
             </select>
           </label>
           <div class="f"><span class="lbl" id="lblAlign">Alignement</span>
@@ -276,7 +334,7 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
         </label>
         <label class="f inline"><input type="checkbox" id="bgGray" data-k="bgGray"><span>Image en noir et blanc</span></label>
         <label class="f rng" for="bgZoom"><span>Zoom de l’image</span><output data-o="bgZoom"></output>
-          <input type="range" id="bgZoom" data-k="bgZoom" min="1" max="3" step="0.01">
+          <input type="range" id="bgZoom" data-k="bgZoom" min="0.3" max="3" step="0.01">
         </label>
         <div class="two">
           <label class="f rng" for="bgX"><span>Horizontal</span><output data-o="bgX"></output>
@@ -295,15 +353,54 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
           <div class="seg" role="radiogroup" aria-labelledby="lblSym">
             <label><input type="radio" name="symbol" data-k="symbol" value="quote" aria-label="Guillemet anglais"><span>“</span></label>
             <label><input type="radio" name="symbol" data-k="symbol" value="guillemet" aria-label="Guillemet français"><span>«</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="low" aria-label="Guillemet bas"><span>„</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="single" aria-label="Apostrophe haute"><span>‘</span></label>
             <label><input type="radio" name="symbol" data-k="symbol" value="star" aria-label="Étoile"><span>★</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="heart" aria-label="Cœur"><span>♥</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="diamond" aria-label="Losange"><span>◆</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="bolt" aria-label="Éclair"><span>ϟ</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="arrow" aria-label="Flèche"><span>▶</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="dot" aria-label="Rond"><span>●</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="cross" aria-label="Croix"><span>✚</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="dash" aria-label="Tiret long"><span>—</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="crown" aria-label="Couronne"><span>♛</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="flame" aria-label="Flamme"><span>🔥&#xFE0E;</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="asterisk" aria-label="Astérisque"><span>✱</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="shield" aria-label="Écusson"><span>⛉</span></label>
+            <label><input type="radio" name="symbol" data-k="symbol" value="custom" aria-label="Symbole personnalisé"><span>✎ Perso</span></label>
             <label><input type="radio" name="symbol" data-k="symbol" value="bar" aria-label="Barre verticale"><span>▌</span></label>
             <label><input type="radio" name="symbol" data-k="symbol" value="none"><span>Aucun</span></label>
           </div>
+        </div>
+        <div class="f" id="customBox">
+          <label class="f" for="custom"><span>Symbole personnalisé : emoji, lettre ou caractère</span>
+            <input type="text" id="custom" data-k="custom" maxlength="12" autocomplete="off" placeholder="Ex. 🔥  ✊  ☭  $  €">
+          </label>
+          <div class="row">
+            <button type="button" class="btn" id="customPick">Importer une icône (PNG, SVG)…</button>
+            <button type="button" class="btn" id="customRm">Retirer l’icône</button>
+            <input type="file" id="customFile" accept="image/*" hidden>
+          </div>
+          <div class="f"><span class="lbl" id="lblCMode">Couleur du symbole perso</span>
+            <div class="seg" role="radiogroup" aria-labelledby="lblCMode">
+              <label><input type="radio" name="customMode" data-k="customMode" value="color"><span>Couleurs d’origine</span></label>
+              <label><input type="radio" name="customMode" data-k="customMode" value="tint"><span>Rempli de la couleur d’accent</span></label>
+            </div>
+          </div>
+          <label class="f rng" for="customScale"><span>Taille du symbole perso</span><output data-o="customScale"></output>
+            <input type="range" id="customScale" data-k="customScale" min="0.5" max="1.4" step="0.02">
+          </label>
+          <p class="hint" id="customHint">Un emoji garde ses couleurs avec « Couleurs d’origine ». Avec « Rempli », l’emoji ou l’icône devient une silhouette de la couleur d’accent (comme le cadre et la photo). L’icône importée n’est pas enregistrée dans « Mes styles ».</p>
         </div>
         <div class="f"><span class="lbl" id="lblBorder">Bordure</span>
           <div class="seg" role="radiogroup" aria-labelledby="lblBorder">
             <label><input type="radio" name="border" data-k="border" value="sides"><span>Barres</span></label>
             <label><input type="radio" name="border" data-k="border" value="frame"><span>Cadre</span></label>
+            <label><input type="radio" name="border" data-k="border" value="double"><span>Double</span></label>
+            <label><input type="radio" name="border" data-k="border" value="rounded"><span>Arrondi</span></label>
+            <label><input type="radio" name="border" data-k="border" value="corners"><span>Coins</span></label>
+            <label><input type="radio" name="border" data-k="border" value="dashed"><span>Pointillés</span></label>
+            <label><input type="radio" name="border" data-k="border" value="tb"><span>Haut / bas</span></label>
             <label><input type="radio" name="border" data-k="border" value="none"><span>Aucune</span></label>
           </div>
         </div>
@@ -315,8 +412,24 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
             <label><input type="radio" name="texture" data-k="texture" value="none"><span>Aucune</span></label>
             <label><input type="radio" name="texture" data-k="texture" value="grain"><span>Grain</span></label>
             <label><input type="radio" name="texture" data-k="texture" value="stripes"><span>Hachures</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="dots"><span>Points</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="grid"><span>Carreaux</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="paper"><span>Papier</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="vignette"><span>Vignette</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="sunburst"><span>Rayons</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="scan"><span>Lignes écran</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="waves"><span>Vagues</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="lozenge"><span>Losanges</span></label>
+            <label><input type="radio" name="texture" data-k="texture" value="comic"><span>Trame BD</span></label>
           </div>
         </div>
+        <label class="f rng" for="texAmt"><span>Intensité de la texture</span><output data-o="texAmt"></output>
+          <input type="range" id="texAmt" data-k="texAmt" min="0.2" max="2" step="0.05">
+        </label>
+        <label class="f rng" for="glow"><span>Puissance lumineuse du néon</span><output data-o="glow"></output>
+          <input type="range" id="glow" data-k="glow" min="0.2" max="2.5" step="0.05">
+        </label>
+        <p class="hint" id="glowHint"></p>
       </section>
 
       <section class="grp" aria-labelledby="g-photo">
@@ -327,7 +440,7 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
           <input type="file" id="file" accept="image/*">
         </label>
         <label class="f rng" for="zoom"><span>Zoom</span><output data-o="zoom"></output>
-          <input type="range" id="zoom" data-k="zoom" min="1" max="4" step="0.01">
+          <input type="range" id="zoom" data-k="zoom" min="0.3" max="4" step="0.01">
         </label>
         <div class="two">
           <label class="f rng" for="fx"><span>Horizontal</span><output data-o="fx"></output>
@@ -366,6 +479,11 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
               <option value="delafield">Mrs Saint Delafield</option>
               <option value="dafoe">Mr Dafoe</option>
               <option value="yellowtail">Yellowtail</option>
+              <option value="greatv">Great Vibes</option>
+              <option value="sacra">Sacramento</option>
+              <option value="satisfy">Satisfy</option>
+              <option value="caveat">Caveat, manuscrite</option>
+              <option value="homemade">Homemade Apple</option>
             </select>
           </label>
           <label class="f rng" for="sigSize"><span>Taille</span><output data-o="sigSize"></output>
@@ -395,6 +513,28 @@ input:disabled, select:disabled{opacity:.45; cursor:not-allowed}
         <ul class="saved" id="saved" aria-label="Styles enregistrés"></ul>
         <p class="hint" id="savedEmpty">Chargement de tes styles…</p>
       </section>
+
+      <section class="grp" aria-labelledby="g-share">
+        <h2 id="g-share">Exporter / importer tout</h2>
+        <p class="hint">Crée un code (ou un fichier) qui contient absolument tout : citation, signature, couleurs, polices, formats de texte, symbole, bordure, texture, néon, zoom et cadrage de la photo, positions de chaque élément, format d’image, et même les images. Importé plus tard, il redonne exactement la même image.</p>
+        <label class="f inline"><input type="checkbox" id="shareImgs" checked><span>Inclure les images (photo, image de fond, icône perso)</span></label>
+        <div class="row">
+          <button type="button" class="btn main" id="exCopy">Copier le code</button>
+          <button type="button" class="btn" id="exFile">Télécharger le fichier (.json)</button>
+        </div>
+        <div class="row">
+          <button type="button" class="btn main" id="imPaste">Coller et importer</button>
+          <button type="button" class="btn" id="imFile">Importer un fichier…</button>
+          <input type="file" id="imFileIn" accept=".json,application/json,text/plain" hidden>
+        </div>
+        <label class="f" for="exCode" id="exWrap" hidden><span>Copie automatique impossible : sélectionne ce code et copie-le (Ctrl+C)</span>
+          <textarea id="exCode" rows="4" readonly></textarea>
+        </label>
+        <label class="f" for="imCode" id="imWrap" hidden><span>Colle le code ici (Ctrl+V), l’import se fait tout seul</span>
+          <textarea id="imCode" rows="4" spellcheck="false" placeholder="Ctrl+V"></textarea>
+        </label>
+        <p class="hint" id="shareMsg" role="status" aria-live="polite"></p>
+      </section>
     </div>
   </div>
 </div>
@@ -411,21 +551,40 @@ var QFONTS = {
   anton:    { css: '"Anton", Impact, "Arial Narrow", sans-serif', weight: 400, style: 'normal', upper: true,  lh: 1.14 },
   bebas:    { css: '"Bebas Neue", Impact, "Arial Narrow", sans-serif', weight: 400, style: 'normal', upper: true, lh: 1.08 },
   archivo:  { css: '"Archivo Black", "Arial Black", Impact, sans-serif', weight: 400, style: 'normal', upper: true, lh: 1.12 },
-  playfair: { css: '"Playfair Display", Georgia, serif', weight: 700, style: 'italic', upper: false, lh: 1.2 }
+  playfair: { css: '"Playfair Display", Georgia, serif', weight: 700, style: 'italic', upper: false, lh: 1.2 },
+  oswald:   { css: '"Oswald", Impact, "Arial Narrow", sans-serif', weight: 600, style: 'normal', upper: true, lh: 1.14 },
+  alfa:     { css: '"Alfa Slab One", Georgia, serif', weight: 400, style: 'normal', upper: true, lh: 1.16 },
+  blackops: { css: '"Black Ops One", Impact, sans-serif', weight: 400, style: 'normal', upper: true, lh: 1.16 },
+  marker:   { css: '"Permanent Marker", "Comic Sans MS", cursive', weight: 400, style: 'normal', upper: true, lh: 1.22 },
+  abril:    { css: '"Abril Fatface", Georgia, serif', weight: 400, style: 'normal', upper: false, lh: 1.16 },
+  baskerv:  { css: '"Libre Baskerville", Georgia, serif', weight: 700, style: 'italic', upper: false, lh: 1.28 },
+  cormo:    { css: '"Cormorant Garamond", Georgia, serif', weight: 600, style: 'italic', upper: false, lh: 1.16 },
+  typewr:   { css: '"Special Elite", "Courier New", monospace', weight: 400, style: 'normal', upper: false, lh: 1.3 }
 };
 var SFONTS = {
   delafield:  { css: '"Mrs Saint Delafield", cursive', k: 1 },
   dafoe:      { css: '"Mr Dafoe", cursive', k: 0.78 },
-  yellowtail: { css: '"Yellowtail", cursive', k: 0.7 }
+  yellowtail: { css: '"Yellowtail", cursive', k: 0.7 },
+  greatv:     { css: '"Great Vibes", cursive', k: 0.8 },
+  sacra:      { css: '"Sacramento", cursive', k: 0.82 },
+  satisfy:    { css: '"Satisfy", cursive', k: 0.7 },
+  caveat:     { css: '"Caveat", cursive', k: 0.85 },
+  homemade:   { css: '"Homemade Apple", cursive', k: 0.5 }
 };
 var PRESETS = {
-  x:  { w: 1500, h: 500 },
-  yt: { w: 2560, h: 1440, safe: { x: 507, y: 508, w: 1546, h: 423 } },
-  th: { w: 1280, h: 720 },
-  li: { w: 1584, h: 396 },
-  sq: { w: 1080, h: 1080 },
-  po: { w: 1080, h: 1350 },
-  st: { w: 1080, h: 1920 }
+  fb: { w: 851, h: 315, view: { x: 146, y: 0, w: 560, h: 315 }, guideLabel: 'Zone visible aussi sur mobile', file: 'couverture-facebook' },
+  fp: { w: 1200, h: 630, file: 'post-facebook' },
+  x:  { w: 1500, h: 500, file: 'banniere-x' },
+  xp: { w: 1200, h: 675, file: 'post-x' },
+  yt: { w: 2560, h: 1440, single: true, safe: { x: 662, y: 551, w: 1235, h: 338 }, guideLabel: 'Zone visible sur tous les écrans', file: 'banniere-youtube' },
+  th: { w: 1280, h: 720, file: 'miniature-youtube' },
+  li: { w: 1584, h: 396, file: 'banniere-linkedin' },
+  lc: { w: 4200, h: 700, single: true, file: 'couverture-linkedin-entreprise' },
+  lp: { w: 1200, h: 627, file: 'post-linkedin' },
+  sq: { w: 1080, h: 1080, file: 'carre' },
+  po: { w: 1080, h: 1350, file: 'portrait' },
+  st: { w: 1080, h: 1920, safe: { x: 0, y: 250, w: 1080, h: 1420 }, guideLabel: 'Zone sûre (marges de 250 px haut et bas)', file: 'story' },
+  pi: { w: 1000, h: 1500, file: 'pin-pinterest' }
 };
 var STYLE_HINTS = {
   classic: 'Fond uni, barres de couleur, symbole devant la citation.',
@@ -441,9 +600,19 @@ var THEMES = [
   { name: 'Bleu nuit',     bg: '#0E1726', fg: '#E8EEF7', accent: '#4F8CFF', hl: '#FFD166' },
   { name: 'Vert bouteille', bg: '#0F1D17', fg: '#E9EFE6', accent: '#3FB27F', hl: '#F2C94C' },
   { name: 'Noir et blanc', bg: '#0B0B0B', fg: '#F5F5F5', accent: '#FFFFFF', hl: '#FFFFFF' },
-  { name: 'Néon',          bg: '#0A0612', fg: '#F4EEFF', accent: '#FF2E93', hl: '#2EE6FF' }
+  { name: 'Néon',          bg: '#0A0612', fg: '#F4EEFF', accent: '#FF2E93', hl: '#2EE6FF' },
+  { name: 'Bordeaux et or', bg: '#1A0A0E', fg: '#F3E6D3', accent: '#B0243A', hl: '#D9A441' },
+  { name: 'Soviétique',    bg: '#7A0F14', fg: '#F6E7B4', accent: '#F2C230', hl: '#FFFFFF' },
+  { name: 'Noir et or',    bg: '#0C0C0C', fg: '#F5EEDC', accent: '#D4AF37', hl: '#F5EEDC' },
+  { name: 'Sable',         bg: '#E7D8B8', fg: '#2A2118', accent: '#A8541F', hl: '#2A2118' },
+  { name: 'Glacier',       bg: '#0B1E26', fg: '#E6F6FA', accent: '#35C8E6', hl: '#FFE08A' },
+  { name: 'Violet',        bg: '#150D24', fg: '#EFE8FF', accent: '#9B6BFF', hl: '#FFC857' },
+  { name: 'Rose poudré',   bg: '#F4E4E1', fg: '#2B1B1F', accent: '#C2456B', hl: '#2B1B1F' },
+  { name: 'Cyber jaune',   bg: '#0E0E10', fg: '#F8F8F2', accent: '#FCEE09', hl: '#00F0FF' }
 ];
-var MARKW = { quote: 150, guillemet: 150, star: 122, bar: 34, none: 0 };
+var MARKW = { quote: 150, guillemet: 150, low: 150, single: 110, star: 122, heart: 122, diamond: 100, bolt: 110, arrow: 110, dot: 100, cross: 110, dash: 122, crown: 122, flame: 110, asterisk: 110, shield: 110, custom: 122, bar: 34, none: 0 };
+var GLYPHS = { quote: ['“', 320], guillemet: ['«', 300], low: ['„', 320], single: ['‘', 320] };
+function hasMark(k){ return k !== 'bar' && k !== 'none'; }
 
 var DEFAULTS = {
   style: 'classic',
@@ -452,22 +621,23 @@ var DEFAULTS = {
   hlStyle: 'color', hlSame: true, hl: '#E8A317',
   bg: '#14110F', fg: '#F2EBDD', accent: '#D12B1F',
   bgUse: false, bgDim: 0.62, bgGray: true, bgZoom: 1, bgX: 0.5, bgY: 0.5,
-  symbol: 'quote', border: 'sides', borderW: 18, texture: 'none',
+  symbol: 'quote', border: 'sides', borderW: 18, texture: 'none', texAmt: 1, glow: 1, tshadow: false, lhx: 1, track: 0, custom: '', customMode: 'color', customScale: 1,
   zoom: 1, fx: 0.46, fy: 0.28, photoSize: 190, ring: 5, filter: 'bw',
   sig: 'Al Capone', sigFont: 'delafield', sigSize: 66, sigSame: true, sigColor: '#F2EBDD', caption: '',
-  preset: 'x', scale: 1, format: 'png', guides: true, snap: true
+  preset: 'x', scale: 1, format: 'png', guides: true, snap: true, follow: false
 };
 var ENUMS = {
   style: STYLE_HINTS, font: QFONTS, align: { left: 1, center: 1, right: 1 }, hlStyle: { color: 1, marker: 1 },
-  symbol: MARKW, border: { sides: 1, frame: 1, none: 1 }, texture: { none: 1, grain: 1, stripes: 1 },
-  filter: { bw: 1, sepia: 1, color: 1 }, sigFont: SFONTS, preset: PRESETS
+  symbol: MARKW, border: { sides: 1, frame: 1, double: 1, rounded: 1, corners: 1, dashed: 1, tb: 1, none: 1 }, texture: { none: 1, grain: 1, stripes: 1, dots: 1, grid: 1, paper: 1, vignette: 1, sunburst: 1, scan: 1, waves: 1, lozenge: 1, comic: 1 },
+  filter: { bw: 1, sepia: 1, color: 1 }, customMode: { color: 1, tint: 1 }, sigFont: SFONTS, preset: PRESETS
 };
 /* réglages liés à une photo précise ou au fichier exporté : jamais enregistrés dans un style */
-var NOT_SAVED = ['zoom', 'fx', 'fy', 'bgX', 'bgY', 'bgZoom', 'bgUse', 'format', 'scale', 'guides', 'snap'];
+var NOT_SAVED = ['zoom', 'fx', 'fy', 'bgX', 'bgY', 'bgZoom', 'bgUse', 'format', 'scale', 'guides', 'snap', 'follow'];
 var TEXT_KEYS = ['text', 'sig', 'caption'];
 var S = Object.assign({}, DEFAULTS);
 
-var photo = null, bgImg = null;
+var photo = null, bgImg = null, customImg = null;
+var photoSrc = null, bgSrc = null, customSrc = null;   /* images d'origine, pour l'export complet */
 var GEO = { photo: null };
 var cv = $('#cv');
 
@@ -500,53 +670,89 @@ function pickText(on){
 
 /* ---------- texte et surlignage ---------- */
 function parseText(raw){
-  var s = S.upper ? raw.toUpperCase() : raw;
-  var paras = [[]];
-  var hl = false, word = null, i = 0;
+  var f = toFlags(raw), paras = [[]], word = null;
   function flush(){ if (word){ paras[paras.length - 1].push(word); word = null; } }
-  while (i < s.length){
-    if (s.substr(i, 2) === '[['){ hl = true; i += 2; continue; }
-    if (s.substr(i, 2) === ']]'){ hl = false; i += 2; continue; }
-    var ch = s.charAt(i);
-    if (ch === '\n'){ flush(); paras.push([]); }
-    else if (/\s/.test(ch)){ flush(); }
+  f.chars.forEach(function(c){
+    if (c.ch === '\n'){ flush(); paras.push([]); }
+    else if (/\s/.test(c.ch)){ flush(); }
     else {
       if (!word) word = [];
+      var t = S.upper ? c.ch.toUpperCase() : c.ch;
       var last = word[word.length - 1];
-      if (last && last.hl === hl) last.t += ch; else word.push({ t: ch, hl: hl });
+      if (last && sameSt(last, c)) last.t += t;
+      else { var p = Object.assign({}, c); delete p.ch; p.t = t; word.push(p); }
     }
-    i++;
-  }
+  });
   flush();
   return paras;
 }
+var TAG_START = /^(?:\[\[|\]\]|\{\/?(?:b|i|u|s|big|small)\}|\{c:#[0-9a-fA-F]{6}\}|\{\/c\})/i;
+var TAG_ALL = /\[\[|\]\]|\{\/?(?:b|i|u|s|big|small)\}|\{c:#[0-9a-fA-F]{6}\}|\{\/c\}/gi;
+var SZF = { '': 1, big: 1.35, small: 0.7 };
+var FLAGKEYS = ['hl', 'b', 'i', 'u', 's', 'sz', 'col'];
+function plain(t){ return String(t).replace(TAG_ALL, ''); }
+function newState(){ return { hl: false, b: false, i: false, u: false, s: false, sz: '', col: '' }; }
+function sameSt(a, b){
+  return a.hl === b.hl && a.b === b.b && a.i === b.i && a.u === b.u && a.s === b.s && a.sz === b.sz && a.col === b.col;
+}
+function applyTag(st, t){
+  if (t === '[[') st.hl = true;
+  else if (t === ']]') st.hl = false;
+  else if (t === '{big}') st.sz = 'big';
+  else if (t === '{small}') st.sz = 'small';
+  else if (t === '{/big}'){ if (st.sz === 'big') st.sz = ''; }
+  else if (t === '{/small}'){ if (st.sz === 'small') st.sz = ''; }
+  else if (t === '{/c}') st.col = '';
+  else if (t.indexOf('{c:') === 0) st.col = t.slice(3, 10);
+  else { var on = t.charAt(1) !== '/'; st[on ? t.charAt(1) : t.charAt(2)] = on; }
+}
 function toFlags(raw){
-  var chars = [], map = new Array(raw.length + 1), hl = false, i = 0;
+  var chars = [], map = new Array(raw.length + 1), st = newState(), i = 0;
   while (i < raw.length){
+    var m = raw.substr(i, 16).match(TAG_START);
+    if (m){
+      for (var k = 0; k < m[0].length; k++) map[i + k] = chars.length;
+      applyTag(st, m[0].toLowerCase());
+      i += m[0].length;
+      continue;
+    }
     map[i] = chars.length;
-    if (raw.substr(i, 2) === '[['){ hl = true; map[i + 1] = chars.length; i += 2; continue; }
-    if (raw.substr(i, 2) === ']]'){ hl = false; map[i + 1] = chars.length; i += 2; continue; }
-    chars.push({ ch: raw.charAt(i), hl: hl });
+    chars.push(Object.assign({ ch: raw.charAt(i) }, st));
     i++;
   }
   map[raw.length] = chars.length;
   return { chars: chars, map: map };
 }
-function fromFlags(chars){
-  var out = '', open = false;
+function fromFlagsPos(chars){
+  var out = '', cur = newState(), pos = [];
   chars.forEach(function(c){
-    if (c.hl && !open){ out += '[['; open = true; }
-    if (!c.hl && open){ out += ']]'; open = false; }
+    ['b', 'i', 'u', 's'].forEach(function(k){ if (cur[k] && !c[k]) out += '{/' + k + '}'; });
+    if (cur.hl && !c.hl) out += ']]';
+    if (cur.sz && cur.sz !== c.sz) out += '{/' + cur.sz + '}';
+    if (cur.col && !c.col) out += '{/c}';
+    if (c.hl && !cur.hl) out += '[[';
+    ['b', 'i', 'u', 's'].forEach(function(k){ if (c[k] && !cur[k]) out += '{' + k + '}'; });
+    if (c.sz && c.sz !== cur.sz) out += '{' + c.sz + '}';
+    if (c.col && c.col !== cur.col) out += '{c:' + c.col + '}';
+    cur = { hl: c.hl, b: c.b, i: c.i, u: c.u, s: c.s, sz: c.sz, col: c.col };
+    pos.push(out.length);
     out += c.ch;
   });
-  if (open) out += ']]';
-  return out;
+  ['b', 'i', 'u', 's'].forEach(function(k){ if (cur[k]) out += '{/' + k + '}'; });
+  if (cur.hl) out += ']]';
+  if (cur.sz) out += '{/' + cur.sz + '}';
+  if (cur.col) out += '{/c}';
+  return { text: out, pos: pos };
 }
+function fromFlags(chars){ return fromFlagsPos(chars).text; }
 
 function setSpacing(c, size){
-  if ('letterSpacing' in c) c.letterSpacing = (S.upper ? size * 0.012 : 0) + 'px';
+  if ('letterSpacing' in c) c.letterSpacing = (((S.upper ? 0.012 : 0) + (+S.track || 0) / 100) * size) + 'px';
 }
-function layoutText(c, paras, fontFn, size, maxW){
+function pSize(size, p){ return size * (SZF[p.sz || ''] || 1); }
+function textH(lines){ return lines.reduce(function(a, ln){ return a + ln.h; }, 0); }
+function layoutText(c, paras, fontFn, size, maxW, lh){
+  lh = lh || 1.15;
   c.font = fontFn(size);
   setSpacing(c, size);
   var space = c.measureText(' ').width;
@@ -555,7 +761,14 @@ function layoutText(c, paras, fontFn, size, maxW){
     if (!para.length){ lines.push({ segs: [], w: 0 }); return; }
     var cur = { segs: [], w: 0 };
     para.forEach(function(word){
-      var ww = word.map(function(p){ return { t: p.t, hl: p.hl, w: c.measureText(p.t).width }; });
+      var ww = word.map(function(p){
+        var ps = pSize(size, p);
+        c.font = fontFn(ps, p);
+        setSpacing(c, ps);
+        var o = Object.assign({}, p);
+        o.w = c.measureText(p.t).width;
+        return o;
+      });
       var wlen = ww.reduce(function(a, p){ return a + p.w; }, 0);
       maxWordW = Math.max(maxWordW, wlen);
       if (cur.segs.length && cur.w + space + wlen > maxW){ lines.push(cur); cur = { segs: [], w: 0 }; }
@@ -565,12 +778,17 @@ function layoutText(c, paras, fontFn, size, maxW){
     });
     lines.push(cur);
   });
+  lines.forEach(function(ln){
+    var mf = 1;
+    ln.segs.forEach(function(s){ if (!s.sp) mf = Math.max(mf, SZF[s.sz || ''] || 1); });
+    ln.h = size * lh * mf;
+  });
   return { lines: lines, maxWordW: maxWordW };
 }
 function fitText(c, paras, fontFn, lh, maxW, maxH, lo, hi){
   function test(sz){
-    var r = layoutText(c, paras, fontFn, sz, maxW);
-    return { lines: r.lines, sz: sz, ok: r.lines.length * sz * lh <= maxH && r.maxWordW <= maxW };
+    var r = layoutText(c, paras, fontFn, sz, maxW, lh);
+    return { lines: r.lines, sz: sz, ok: textH(r.lines) <= maxH && r.maxWordW <= maxW };
   }
   var a = lo, b = Math.max(lo, hi);
   while (b - a > 0.5){
@@ -593,18 +811,26 @@ function lineBounds(lines, x0, x1, align){
   return { x0: mn, x1: mx };
 }
 function drawText(c, lines, fontFn, size, lh, x0, x1, top, align, colors){
-  c.font = fontFn(size);
-  setSpacing(c, size);
   c.textBaseline = 'alphabetic';
   c.textAlign = 'left';
-  var lineH = size * lh;
-  var capH = c.measureText('H').actualBoundingBoxAscent || size * 0.72;
-  lines.forEach(function(ln, i){
-    var y = top + i * lineH + lineH / 2 + capH / 2;
+  c.font = fontFn(size);
+  var capH0 = c.measureText('H').actualBoundingBoxAscent || size * 0.72;
+  var acc = top;
+  lines.forEach(function(ln){
+    var mf = ln.h / (size * lh);
+    var capH = capH0 * mf;
+    var y = acc + ln.h / 2 + capH / 2;
+    acc += ln.h;
     var px = lineX(ln, x0, x1, align);
     ln.segs.forEach(function(s){ s.x = px; px += s.w; });
     ln.segs.forEach(function(s, k){
-      if (s.sp){ var p = ln.segs[k - 1], n = ln.segs[k + 1]; s.hl = !!(p && n && p.hl && n.hl); }
+      if (!s.sp) return;
+      var p = ln.segs[k - 1], n = ln.segs[k + 1];
+      s.hl = !!(p && n && p.hl && n.hl);
+      s.u = !!(p && n && p.u && n.u);
+      s.s = !!(p && n && p.s && n.s);
+      s.sz = (p && n && p.sz === n.sz) ? p.sz : '';
+      s.col = (p && n && p.col === n.col) ? p.col : '';
     });
     if (S.hlStyle === 'marker'){
       var start = null, end = 0;
@@ -622,20 +848,32 @@ function drawText(c, lines, fontFn, size, lh, x0, x1, top, align, colors){
       flushRect();
     }
     ln.segs.forEach(function(s){
-      if (s.sp) return;
-      var col = s.hl ? (S.hlStyle === 'marker' ? colors.hlText : colors.hl) : colors.fg;
-      c.fillStyle = col;
-      if (colors.glow){
-        c.shadowColor = col; c.shadowBlur = size * 0.32;
-        c.fillText(s.t, s.x, y);
-        c.fillText(s.t, s.x, y);
-        c.shadowBlur = 0; c.shadowColor = 'transparent';
-      } else {
-        c.fillText(s.t, s.x, y);
+      var ps = pSize(size, s);
+      var col = s.hl ? (S.hlStyle === 'marker' ? colors.hlText : colors.hl) : (s.col || colors.fg);
+      if (!s.sp){
+        c.font = fontFn(ps, s);
+        setSpacing(c, ps);
+        c.fillStyle = col;
+        if (colors.glow){
+          c.shadowColor = col; c.shadowBlur = ps * 0.32 * colors.glow;
+          var passes = colors.glow < 0.6 ? 1 : colors.glow < 1.5 ? 2 : 3;
+          for (var pz = 0; pz < passes; pz++) c.fillText(s.t, s.x, y);
+          c.shadowBlur = 0; c.shadowColor = 'transparent';
+        } else {
+          if (S.tshadow){ c.shadowColor = 'rgba(0,0,0,0.5)'; c.shadowBlur = ps * 0.09; c.shadowOffsetY = ps * 0.045; }
+          c.fillText(s.t, s.x, y);
+          c.shadowBlur = 0; c.shadowOffsetY = 0; c.shadowColor = 'transparent';
+        }
+      }
+      if (s.u || s.s){
+        c.fillStyle = col;
+        var th = Math.max(1, ps * 0.055);
+        if (s.u) c.fillRect(s.x, y + ps * 0.09, s.w, th);
+        if (s.s) c.fillRect(s.x, y - capH0 * (ps / size) * 0.5 - th / 2, s.w, th);
       }
     });
   });
-  return capH;
+  return capH0;
 }
 
 /* ---------- symbole ---------- */
@@ -643,30 +881,107 @@ function drawMark(c, kind, align, x0, x1, topY, u, color, glow){
   var box = null;
   c.fillStyle = color;
   if ('letterSpacing' in c) c.letterSpacing = '0px';
-  if (glow){ c.shadowColor = color; c.shadowBlur = 22 * u; }
+  if (glow){ c.shadowColor = color; c.shadowBlur = 22 * u * glow; }
   function pos(w){ return align === 'left' ? x0 : align === 'right' ? x1 - w : x0 + (x1 - x0 - w) / 2; }
-  if (kind === 'quote' || kind === 'guillemet'){
-    var g = kind === 'quote' ? '“' : '«';
-    c.font = 'italic 700 ' + ((kind === 'quote' ? 320 : 300) * u) + 'px "Playfair Display", Georgia, serif';
+  if (GLYPHS[kind]){
+    var g = GLYPHS[kind][0];
+    c.font = 'italic 700 ' + (GLYPHS[kind][1] * u) + 'px "Playfair Display", Georgia, serif';
     c.textAlign = 'left';
     c.textBaseline = 'alphabetic';
     var m = c.measureText(g);
     var w = m.actualBoundingBoxLeft + m.actualBoundingBoxRight;
     c.fillText(g, pos(w) + m.actualBoundingBoxLeft, topY + m.actualBoundingBoxAscent);
     box = { x: pos(w), y: topY, w: w, h: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent };
-  } else if (kind === 'star'){
+  } else if (kind !== 'bar' && kind !== 'none' && kind in MARKW){
     var R = 54 * u;
     var cx = pos(2 * R) + R, cy = topY + R;
-    c.beginPath();
-    for (var i = 0; i < 10; i++){
-      var rr = i % 2 ? R * 0.42 : R;
-      var a = -Math.PI / 2 + i * Math.PI / 5;
-      var px = cx + rr * Math.cos(a), py = cy + rr * Math.sin(a);
-      if (i) c.lineTo(px, py); else c.moveTo(px, py);
-    }
-    c.closePath();
-    c.fill();
+    var poly = function(pts){
+      c.beginPath();
+      pts.forEach(function(p, i){ if (i) c.lineTo(cx + p[0] * R, cy + p[1] * R); else c.moveTo(cx + p[0] * R, cy + p[1] * R); });
+      c.closePath(); c.fill();
+    };
     box = { x: cx - R, y: topY, w: 2 * R, h: 2 * R };
+    if (kind === 'star'){
+      c.beginPath();
+      for (var i = 0; i < 10; i++){
+        var rr = i % 2 ? R * 0.42 : R;
+        var a = -Math.PI / 2 + i * Math.PI / 5;
+        var px = cx + rr * Math.cos(a), py = cy + rr * Math.sin(a);
+        if (i) c.lineTo(px, py); else c.moveTo(px, py);
+      }
+      c.closePath(); c.fill();
+    } else if (kind === 'heart'){
+      c.beginPath();
+      c.moveTo(cx, cy + R * 0.95);
+      c.bezierCurveTo(cx + R * 1.5, cy - R * 0.05, cx + R * 0.8, cy - R * 1.05, cx, cy - R * 0.4);
+      c.bezierCurveTo(cx - R * 0.8, cy - R * 1.05, cx - R * 1.5, cy - R * 0.05, cx, cy + R * 0.95);
+      c.closePath(); c.fill();
+    } else if (kind === 'diamond'){
+      poly([[0, -1], [0.72, 0], [0, 1], [-0.72, 0]]);
+    } else if (kind === 'bolt'){
+      poly([[0.2, -1], [-0.6, 0.15], [-0.05, 0.15], [-0.25, 1], [0.6, -0.25], [0.05, -0.25], [0.45, -1]]);
+    } else if (kind === 'arrow'){
+      poly([[-0.8, -0.9], [0.9, 0], [-0.8, 0.9]]);
+    } else if (kind === 'dot'){
+      c.beginPath(); c.arc(cx, cy, R * 0.8, 0, Math.PI * 2); c.fill();
+    } else if (kind === 'cross'){
+      c.fillRect(cx - R * 0.17, cy - R, R * 0.34, 2 * R);
+      c.fillRect(cx - R, cy - R * 0.17, 2 * R, R * 0.34);
+    } else if (kind === 'custom'){
+      var side = 2 * R * clamp(+S.customScale || 1, 0.3, 2);
+      var label = Array.from(String(S.custom || '')).slice(0, 8).join('');
+      box = { x: cx - side / 2, y: cy - side / 2, w: side, h: side };
+      if (customImg || label){
+        var N = Math.max(8, Math.ceil(side));
+        var oc = document.createElement('canvas'); oc.width = oc.height = N;
+        var og = oc.getContext('2d');
+        if (customImg){
+          var sc = Math.min(N / customImg.width, N / customImg.height);
+          var iw = customImg.width * sc, ih = customImg.height * sc;
+          og.drawImage(customImg, (N - iw) / 2, (N - ih) / 2, iw, ih);
+        } else {
+          var fs = N * 0.8;
+          var fam = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji","Segoe UI Symbol",sans-serif';
+          og.font = fs + 'px ' + fam;
+          var tw = og.measureText(label).width;
+          if (tw > N){ fs *= N / tw; og.font = fs + 'px ' + fam; }
+          og.textAlign = 'center'; og.textBaseline = 'middle';
+          og.fillStyle = color;
+          og.fillText(label, N / 2, N / 2 + fs * 0.05);
+        }
+        if (S.customMode === 'tint'){
+          og.globalCompositeOperation = 'source-in';
+          og.fillStyle = color; og.fillRect(0, 0, N, N);
+        }
+        c.drawImage(oc, cx - side / 2, cy - side / 2, side, side);
+      }
+    } else if (kind === 'crown'){
+      poly([[-1, 0.7], [-1, -0.6], [-0.5, 0.05], [0, -0.85], [0.5, 0.05], [1, -0.6], [1, 0.7]]);
+    } else if (kind === 'flame'){
+      var B = function(a, b, c2, d2, e2, f2){ c.bezierCurveTo(cx + a * R, cy + b * R, cx + c2 * R, cy + d2 * R, cx + e2 * R, cy + f2 * R); };
+      c.beginPath(); c.moveTo(cx, cy - R);
+      B(0.2, -0.55, 0.85, -0.35, 0.8, 0.3);
+      B(0.78, 0.85, 0.3, 1, 0, 1);
+      B(-0.5, 1, -0.85, 0.7, -0.8, 0.2);
+      B(-0.78, -0.1, -0.55, -0.3, -0.45, -0.55);
+      B(-0.3, -0.3, -0.15, -0.25, -0.1, -0.1);
+      B(-0.15, -0.5, -0.05, -0.8, 0, -1);
+      c.closePath(); c.fill();
+    } else if (kind === 'asterisk'){
+      for (var ai = 0; ai < 3; ai++){
+        c.save(); c.translate(cx, cy); c.rotate(ai * Math.PI / 3);
+        c.fillRect(-R * 0.16, -R, R * 0.32, 2 * R);
+        c.restore();
+      }
+    } else if (kind === 'shield'){
+      c.beginPath(); c.moveTo(cx - R * 0.8, cy - R * 0.9); c.lineTo(cx + R * 0.8, cy - R * 0.9); c.lineTo(cx + R * 0.8, cy);
+      c.bezierCurveTo(cx + R * 0.8, cy + R * 0.55, cx + R * 0.35, cy + R * 0.85, cx, cy + R);
+      c.bezierCurveTo(cx - R * 0.35, cy + R * 0.85, cx - R * 0.8, cy + R * 0.55, cx - R * 0.8, cy);
+      c.closePath(); c.fill();
+    } else if (kind === 'dash'){
+      c.fillRect(cx - R, cy - R * 0.16, 2 * R, R * 0.32);
+      box = { x: cx - R, y: cy - R * 0.16, w: 2 * R, h: R * 0.32 };
+    }
   }
   c.shadowBlur = 0; c.shadowColor = 'transparent';
   return box;
@@ -698,6 +1013,7 @@ function photoCanvas(src, d, zoom, fx, fy, filter){
   var g = off.getContext('2d');
   var s = Math.max(size / src.width, size / src.height) * zoom;
   var dw = src.width * s, dh = src.height * s;
+  g.fillStyle = S.bg; g.fillRect(0, 0, size, size);
   g.drawImage(src, -(dw - size) * fx, -(dh - size) * fy, dw, dh);
   if (filter !== 'color') applyFilter(g, size, filter);
   return off;
@@ -708,7 +1024,7 @@ function drawPhoto(c, cx, cy, D, u, geo, ringColor, glow){
   var ri = ringW > 0.5 ? r - ringW : r;
   if (ringW > 0.5){
     c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fillStyle = ringColor;
-    if (glow){ c.shadowColor = ringColor; c.shadowBlur = 24 * u; }
+    if (glow){ c.shadowColor = ringColor; c.shadowBlur = 24 * u * glow; }
     c.fill();
     c.shadowBlur = 0; c.shadowColor = 'transparent';
   }
@@ -776,6 +1092,28 @@ function erodeCanvas(){
   }
   return ERODE;
 }
+var PAPER = null;
+function paperCanvas(){
+  if (PAPER) return PAPER;
+  PAPER = document.createElement('canvas');
+  PAPER.width = PAPER.height = 256;
+  var g = PAPER.getContext('2d');
+  for (var i = 0; i < 90; i++){
+    var x = Math.random() * 256, y = Math.random() * 256, r = 14 + Math.random() * 46;
+    var rg = g.createRadialGradient(x, y, 0, x, y, r);
+    var dark = Math.random() < 0.5;
+    rg.addColorStop(0, dark ? 'rgba(60,40,10,0.07)' : 'rgba(255,250,235,0.07)');
+    rg.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = rg; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  for (var j = 0; j < 160; j++){
+    g.strokeStyle = Math.random() < 0.5 ? 'rgba(60,40,10,0.16)' : 'rgba(255,250,235,0.18)';
+    g.lineWidth = 0.5 + Math.random() * 0.5;
+    var sx = Math.random() * 256, sy = Math.random() * 256, an = Math.random() * 6.28, ln = 3 + Math.random() * 9;
+    g.beginPath(); g.moveTo(sx, sy); g.lineTo(sx + Math.cos(an) * ln, sy + Math.sin(an) * ln); g.stroke();
+  }
+  return PAPER;
+}
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
   g.moveTo(x + r, y);
@@ -793,7 +1131,7 @@ function rotated(g, px, py, ang, fn){
 
 /* ---------- rendu ---------- */
 var ELEMS = ['shape', 'text', 'mark', 'photo', 'sig', 'cap'];
-var ELEM_NAMES = { shape: 'Fond', text: 'Texte', mark: 'Symbole', photo: 'Photo', sig: 'Signature', cap: 'Légende' };
+var ELEM_NAMES = { shape: 'Fond', text: 'Texte', mark: 'Symbole', photo: 'Photo', sig: 'Signature', cap: 'Légende', all: 'Tout' };
 var OFF = {};
 function resetOffsets(){ ELEMS.forEach(function(k){ OFF[k] = { x: 0, y: 0 }; }); }
 resetOffsets();
@@ -821,9 +1159,15 @@ function render(canvas, P, k, preview){
   var u = layout === 'wide' ? H / 500 : layout === 'split' ? H / 540 : W / 1000;
   var st = S.style;
   var neon = st === 'neon';
+  var gl = clamp(+S.glow || 1, 0.2, 3);
   var ang = st === 'poster' ? -0.055 : st === 'stamp' ? -0.045 : 0;
   var q = QFONTS[S.font];
-  var fontFn = function(sz){ return (q.style === 'italic' ? 'italic ' : '') + q.weight + ' ' + sz + 'px ' + q.css; };
+  var fontFn = function(sz, st){
+    var it = q.style === 'italic', w = q.weight;
+    if (st){ if (st.i) it = !it; if (st.b) w = w < 600 ? 700 : 900; }
+    return (it ? 'italic ' : '') + w + ' ' + sz + 'px ' + q.css;
+  };
+  var LH = q.lh * clamp(+S.lhx || 1, 0.6, 2);
   var geo = { photo: null, boxes: {}, region: R };
   var paras = parseText(S.text);
   var hasSig = S.sig.trim().length > 0;
@@ -847,7 +1191,7 @@ function render(canvas, P, k, preview){
     if (S.sigSame) sigColor = onAccent;
     capColor = mix(S.accent, onAccent, 0.82);
   }
-  var colors = { fg: textColor, hl: hlColor, hlText: pickText(hlColor), glow: neon };
+  var colors = { fg: textColor, hl: hlColor, hlText: pickText(hlColor), glow: neon ? gl : 0 };
 
   /* fond : couleur, image, voile, texture */
   c.fillStyle = S.bg; c.fillRect(0, 0, CW, CH);
@@ -863,16 +1207,100 @@ function render(canvas, P, k, preview){
   var gu = Math.max(0.6, CW / 1500);
   if (S.texture === 'grain'){
     c.save();
+    c.globalAlpha = clamp(S.texAmt, 0, 1);
     var pat = c.createPattern(noiseCanvas(), 'repeat');
     try { pat.setTransform(new DOMMatrix().scale(gu)); } catch (e) {}
     c.fillStyle = pat; c.fillRect(0, 0, CW, CH);
     c.restore();
   } else if (S.texture === 'stripes'){
     c.save();
-    c.strokeStyle = S.fg; c.globalAlpha = 0.05; c.lineWidth = 2 * gu;
+    c.strokeStyle = S.fg; c.globalAlpha = clamp(0.05 * S.texAmt, 0, 1); c.lineWidth = 2 * gu;
     for (var hx = -CH; hx < CW + CH; hx += 16 * gu){
       c.beginPath(); c.moveTo(hx, CH); c.lineTo(hx + CH, 0); c.stroke();
     }
+    c.restore();
+  } else if (S.texture === 'dots'){
+    c.save();
+    c.fillStyle = S.fg; c.globalAlpha = clamp(0.07 * S.texAmt, 0, 1);
+    var ds = 16 * gu, dr = 2.6 * gu;
+    for (var dy = ds / 2; dy < CH; dy += ds){
+      for (var dx = ((Math.round(dy / ds) % 2) ? ds / 2 : 0) + ds / 2; dx < CW + ds; dx += ds){
+        c.beginPath(); c.arc(dx, dy, dr, 0, Math.PI * 2); c.fill();
+      }
+    }
+    c.restore();
+  } else if (S.texture === 'grid'){
+    c.save();
+    c.strokeStyle = S.fg; c.globalAlpha = clamp(0.07 * S.texAmt, 0, 1); c.lineWidth = Math.max(1, 1.5 * gu);
+    var gs = 44 * gu;
+    c.beginPath();
+    for (var gx = 0; gx <= CW; gx += gs){ c.moveTo(gx, 0); c.lineTo(gx, CH); }
+    for (var gy = 0; gy <= CH; gy += gs){ c.moveTo(0, gy); c.lineTo(CW, gy); }
+    c.stroke();
+    c.restore();
+  } else if (S.texture === 'paper'){
+    c.save();
+    c.globalAlpha = clamp(S.texAmt, 0, 1.6) > 1 ? 1 : clamp(S.texAmt, 0, 1);
+    var ppat = c.createPattern(paperCanvas(), 'repeat');
+    try { ppat.setTransform(new DOMMatrix().scale(gu * 1.4)); } catch (e) {}
+    c.fillStyle = ppat; c.fillRect(0, 0, CW, CH);
+    c.restore();
+  } else if (S.texture === 'sunburst'){
+    c.save();
+    c.fillStyle = S.fg; c.globalAlpha = clamp(0.07 * S.texAmt, 0, 1);
+    var sbx = CW * 0.5, sby = CH * 0.5, sbr = Math.hypot(CW, CH), sn = 28;
+    for (var si = 0; si < sn; si++){
+      var a1 = si * 2 * Math.PI / sn, a2 = a1 + Math.PI / sn;
+      c.beginPath(); c.moveTo(sbx, sby);
+      c.lineTo(sbx + sbr * Math.cos(a1), sby + sbr * Math.sin(a1));
+      c.lineTo(sbx + sbr * Math.cos(a2), sby + sbr * Math.sin(a2));
+      c.closePath(); c.fill();
+    }
+    c.restore();
+  } else if (S.texture === 'scan'){
+    c.save();
+    c.fillStyle = S.fg; c.globalAlpha = clamp(0.06 * S.texAmt, 0, 1);
+    for (var ly = 0; ly < CH; ly += 6 * gu) c.fillRect(0, ly, CW, 2.2 * gu);
+    c.restore();
+  } else if (S.texture === 'waves'){
+    c.save();
+    c.strokeStyle = S.fg; c.globalAlpha = clamp(0.08 * S.texAmt, 0, 1); c.lineWidth = Math.max(1, 1.8 * gu);
+    for (var wy = 0; wy < CH + 30 * gu; wy += 22 * gu){
+      c.beginPath();
+      for (var wx = 0; wx <= CW; wx += 6 * gu){
+        var yy2 = wy + Math.sin(wx / (14 * gu)) * 7 * gu;
+        if (wx) c.lineTo(wx, yy2); else c.moveTo(wx, yy2);
+      }
+      c.stroke();
+    }
+    c.restore();
+  } else if (S.texture === 'lozenge'){
+    c.save();
+    c.strokeStyle = S.fg; c.globalAlpha = clamp(0.07 * S.texAmt, 0, 1); c.lineWidth = Math.max(1, 1.6 * gu);
+    var lz = 38 * gu;
+    c.beginPath();
+    for (var lx = -CH; lx < CW + CH; lx += lz){
+      c.moveTo(lx, CH); c.lineTo(lx + CH, 0);
+      c.moveTo(lx, 0); c.lineTo(lx + CH, CH);
+    }
+    c.stroke();
+    c.restore();
+  } else if (S.texture === 'comic'){
+    c.save();
+    c.fillStyle = S.fg; c.globalAlpha = clamp(0.11 * S.texAmt, 0, 1);
+    var cs = 16 * gu;
+    for (var cy2 = cs / 2; cy2 < CH; cy2 += cs){
+      for (var cx2 = ((Math.round(cy2 / cs) % 2) ? cs / 2 : 0) + cs / 2; cx2 < CW + cs; cx2 += cs){
+        var tt = clamp(cx2 / CW, 0, 1);
+        c.beginPath(); c.arc(cx2, cy2, (0.3 + 4.4 * tt * tt) * gu, 0, Math.PI * 2); c.fill();
+      }
+    }
+    c.restore();
+  } else if (S.texture === 'vignette'){
+    c.save();
+    var vg = c.createRadialGradient(CW / 2, CH / 2, Math.min(CW, CH) * 0.25, CW / 2, CH / 2, Math.hypot(CW, CH) * 0.55);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,' + clamp(0.6 * S.texAmt, 0, 0.95) + ')');
+    c.fillStyle = vg; c.fillRect(0, 0, CW, CH);
     c.restore();
   }
 
@@ -886,17 +1314,19 @@ function render(canvas, P, k, preview){
   var carriesPhoto = duo;
   var so = OFF.shape;
   var Sh = { x: so.x * W, y: so.y * H };
-  var T = { x: ((carriesText ? so.x : 0) + OFF.text.x) * W, y: ((carriesText ? so.y : 0) + OFF.text.y) * H };
-  var M = { x: T.x + OFF.mark.x * W, y: T.y + OFF.mark.y * H };
-  var Ph = { x: ((carriesPhoto ? so.x : 0) + OFF.photo.x) * W, y: ((carriesPhoto ? so.y : 0) + OFF.photo.y) * H };
-  var Sg = { x: Ph.x + OFF.sig.x * W, y: Ph.y + OFF.sig.y * H };
-  var Cp = { x: Sg.x + OFF.cap.x * W, y: Sg.y + OFF.cap.y * H };
+  var fl = S.follow ? 1 : 0;
+  var bt = carriesText ? so : { x: 0, y: 0 }, bp = carriesPhoto ? so : { x: 0, y: 0 };
+  var T = { x: (bt.x + OFF.text.x) * W, y: (bt.y + OFF.text.y) * H };
+  var M = { x: (bt.x + fl * OFF.text.x + OFF.mark.x) * W, y: (bt.y + fl * OFF.text.y + OFF.mark.y) * H };
+  var Ph = { x: (bp.x + OFF.photo.x) * W, y: (bp.y + OFF.photo.y) * H };
+  var Sg = { x: (bp.x + fl * OFF.photo.x + OFF.sig.x) * W, y: (bp.y + fl * OFF.photo.y + OFF.sig.y) * H };
+  var Cp = { x: (bp.x + fl * (OFF.photo.x + OFF.sig.x) + OFF.cap.x) * W, y: (bp.y + fl * (OFF.photo.y + OFF.sig.y) + OFF.cap.y) * H };
   var boxes = geo.boxes;
 
   function drawBorder(){
     var bw = S.borderW * u;
     c.fillStyle = S.accent;
-    if (neon){ c.shadowColor = S.accent; c.shadowBlur = 18 * u; }
+    if (neon){ c.shadowColor = S.accent; c.shadowBlur = 18 * u * gl; }
     if (S.border === 'sides'){
       c.fillRect(0, 0, bw, H);
       c.fillRect(0, H - bw / 3, W, bw / 3);
@@ -904,14 +1334,43 @@ function render(canvas, P, k, preview){
       var lw = Math.max(2, bw / 2), inset = 26 * u;
       c.strokeStyle = S.accent; c.lineWidth = lw;
       c.strokeRect(inset + lw / 2, inset + lw / 2, W - 2 * inset - lw, H - 2 * inset - lw);
+    } else if (S.border === 'double'){
+      var dl = Math.max(2, bw / 4), di = 22 * u, dg = Math.max(5 * u, dl * 2.2);
+      c.strokeStyle = S.accent; c.lineWidth = dl;
+      c.strokeRect(di + dl / 2, di + dl / 2, W - 2 * di - dl, H - 2 * di - dl);
+      var di2 = di + dl + dg;
+      c.strokeRect(di2 + dl / 2, di2 + dl / 2, W - 2 * di2 - dl, H - 2 * di2 - dl);
+    } else if (S.border === 'rounded'){
+      var rl = Math.max(2, bw / 2), ri2 = 26 * u;
+      c.strokeStyle = S.accent; c.lineWidth = rl;
+      roundRect(c, ri2 + rl / 2, ri2 + rl / 2, W - 2 * ri2 - rl, H - 2 * ri2 - rl, 34 * u);
+      c.stroke();
+    } else if (S.border === 'dashed'){
+      var kl = Math.max(2, bw / 2.5), ki = 26 * u;
+      c.strokeStyle = S.accent; c.lineWidth = kl; c.setLineDash([kl * 3.2, kl * 2.2]);
+      c.strokeRect(ki + kl / 2, ki + kl / 2, W - 2 * ki - kl, H - 2 * ki - kl);
+      c.setLineDash([]);
+    } else if (S.border === 'corners'){
+      var cl = Math.max(3, bw / 2), ci = 28 * u, cn = Math.min(W, H) * 0.2;
+      c.strokeStyle = S.accent; c.lineWidth = cl; c.lineCap = 'butt';
+      var o2 = ci + cl / 2;
+      c.beginPath();
+      c.moveTo(o2, o2 + cn); c.lineTo(o2, o2); c.lineTo(o2 + cn, o2);
+      c.moveTo(W - o2 - cn, o2); c.lineTo(W - o2, o2); c.lineTo(W - o2, o2 + cn);
+      c.moveTo(W - o2, H - o2 - cn); c.lineTo(W - o2, H - o2); c.lineTo(W - o2 - cn, H - o2);
+      c.moveTo(o2 + cn, H - o2); c.lineTo(o2, H - o2); c.lineTo(o2, H - o2 - cn);
+      c.stroke();
+    } else if (S.border === 'tb'){
+      c.fillRect(0, 0, W, bw / 1.6);
+      c.fillRect(0, H - bw / 1.6, W, bw / 1.6);
     }
     c.shadowBlur = 0; c.shadowColor = 'transparent';
   }
 
   function fit(maxW, maxH, hi){
-    if (S.auto) return fitText(c, paras, fontFn, q.lh, maxW, maxH, 12 * u, hi);
+    if (S.auto) return fitText(c, paras, fontFn, LH, maxW, maxH, 12 * u, hi);
     var sz = S.size * u;
-    return { lines: layoutText(c, paras, fontFn, sz, maxW).lines, sz: sz };
+    return { lines: layoutText(c, paras, fontFn, sz, maxW, LH).lines, sz: sz };
   }
   function capOf(sz){
     c.font = fontFn(sz);
@@ -925,7 +1384,7 @@ function render(canvas, P, k, preview){
     c.textAlign = 'center'; c.textBaseline = 'alphabetic';
     c.font = sg.font;
     if ('letterSpacing' in c) c.letterSpacing = '0px';
-    if (neon){ c.shadowColor = sigColor; c.shadowBlur = 14 * u; }
+    if (neon){ c.shadowColor = sigColor; c.shadowBlur = 14 * u * gl; }
     c.fillText(S.sig, sx, by + sg.size * 0.72);
     c.shadowBlur = 0; c.shadowColor = 'transparent';
     boxes.sig = { kind: 'rect', x: sx - sg.w / 2, y: by, w: sg.w, h: sg.size * 1.05 };
@@ -946,7 +1405,7 @@ function render(canvas, P, k, preview){
     boxes.cap = { kind: 'rect', x: sx - w / 2, y: by, w: w, h: cs * 1.3 };
   }
   function placePhoto(cx, cy, D){
-    drawPhoto(c, cx + Ph.x, cy + Ph.y, D, u, geo, ringColor, neon);
+    drawPhoto(c, cx + Ph.x, cy + Ph.y, D, u, geo, ringColor, neon ? gl : 0);
     boxes.photo = { kind: 'circle', cx: geo.photo.cx, cy: geo.photo.cy, r: geo.photo.r };
   }
 
@@ -971,18 +1430,18 @@ function render(canvas, P, k, preview){
     }
   }
   function paintText(g){
-    drawText(g, G.res.lines, fontFn, G.res.sz, q.lh, G.tx0, G.tx1, G.textTop, S.align, colors);
+    drawText(g, G.res.lines, fontFn, G.res.sz, LH, G.tx0, G.tx1, G.textTop, S.align, colors);
   }
   function paintMark(g){
     G.markBox = null;
     if (G.bar){
       g.fillStyle = markColor;
-      if (neon){ g.shadowColor = markColor; g.shadowBlur = 20 * u; }
+      if (neon){ g.shadowColor = markColor; g.shadowBlur = 20 * u * gl; }
       g.fillRect(G.bar.x, G.bar.y, G.bar.w, G.bar.h);
       g.shadowBlur = 0; g.shadowColor = 'transparent';
       G.markBox = { x: G.bar.x, y: G.bar.y, w: G.bar.w, h: G.bar.h };
     } else if (G.mark){
-      G.markBox = drawMark(g, S.symbol, G.mark.align, G.mark.x0, G.mark.x1, G.mark.y, u, markColor, neon);
+      G.markBox = drawMark(g, S.symbol, G.mark.align, G.mark.x0, G.mark.x1, G.mark.y, u, markColor, neon ? gl : 0);
     }
   }
   function layer(g, o, fn){
@@ -1038,13 +1497,13 @@ function render(canvas, P, k, preview){
     var cx = W - rightInset - colW / 2;
     if (duo) duoRect = { x: cx - colW / 2 - 40 * u, y: 0, w: W - (cx - colW / 2 - 40 * u), h: H };
     var markW = isWide ? MARKW[S.symbol] * u : (S.symbol === 'bar' ? 34 * u : 0);
-    var markH = (!isWide && (S.symbol === 'quote' || S.symbol === 'guillemet' || S.symbol === 'star')) ? 100 * u : 0;
+    var markH = (!isWide && hasMark(S.symbol)) ? 100 * u : 0;
     var markGap = markH ? 12 * u : 0;
     var tx0 = padL + markW + (markW ? (isWide ? gap : gap / 2) : 0);
     var tx1 = cx - colW / 2 - gap;
     var res = fit(tx1 - tx0, H - 100 * u - markH - markGap, (isWide ? 130 : 190) * u);
-    var lineH = res.sz * q.lh;
-    var Ht = res.lines.length * lineH;
+    var lineH = res.lines.length ? res.lines[0].h : res.sz * LH;
+    var Ht = textH(res.lines);
     var groupH = markH + markGap + Ht;
     var gy = (H - groupH) / 2;
     var textTop = gy + markH + markGap;
@@ -1100,12 +1559,12 @@ function render(canvas, P, k, preview){
     yy += 40 * u;
     var regTop = yy;
     var regBot = H - (S.border === 'sides' ? S.borderW / 3 : 0) * u - 70 * u;
-    var mH = (S.symbol === 'quote' || S.symbol === 'guillemet' || S.symbol === 'star') ? 110 * u : 0;
+    var mH = hasMark(S.symbol) ? 110 * u : 0;
     var mGap = mH ? 14 * u : 0;
     var barW = S.symbol === 'bar' ? 34 * u : 0;
     var sx0 = pL + barW, sx1 = W - pR;
     var rs = fit(sx1 - sx0, Math.max(60 * u, regBot - regTop - mH - mGap), 150 * u);
-    var Hs = rs.lines.length * rs.sz * q.lh;
+    var Hs = textH(rs.lines);
     var gH = mH + mGap + Hs;
     var gy2 = regTop + Math.max(0, (regBot - regTop - gH) / 2);
     var lb2 = lineBounds(rs.lines, sx0, sx1, S.align);
@@ -1145,32 +1604,38 @@ function render(canvas, P, k, preview){
   if (preview){
     var lw2 = Math.max(2, CW / 700);
     var fs = Math.max(13, CW / 100);
-    if (P.safe && S.guides){
+    var GZ = P.safe ? R : P.view ? { x: P.view.x * k, y: P.view.y * k, w: P.view.w * k, h: P.view.h * k } : null;
+    if (GZ && S.guides){
       c.save();
       c.setLineDash([lw2 * 5, lw2 * 3]);
-      c.lineWidth = lw2 * 2; c.strokeStyle = '#000000'; c.strokeRect(R.x, R.y, R.w, R.h);
-      c.lineWidth = lw2; c.strokeStyle = '#FFFFFF'; c.strokeRect(R.x, R.y, R.w, R.h);
+      c.lineWidth = lw2 * 2; c.strokeStyle = '#000000'; c.strokeRect(GZ.x, GZ.y, GZ.w, GZ.h);
+      c.lineWidth = lw2; c.strokeStyle = '#FFFFFF'; c.strokeRect(GZ.x, GZ.y, GZ.w, GZ.h);
       c.setLineDash([]);
       c.font = '600 ' + fs + 'px "Archivo", system-ui, sans-serif';
       c.textAlign = 'left'; c.textBaseline = 'bottom';
-      var label = 'Zone visible sur tous les écrans';
+      var label = P.guideLabel || 'Zone visible';
       var tw = c.measureText(label).width;
-      c.fillStyle = 'rgba(0,0,0,.65)'; c.fillRect(R.x, R.y - fs * 1.6, tw + fs, fs * 1.6);
-      c.fillStyle = '#FFFFFF'; c.fillText(label, R.x + fs / 2, R.y - fs * 0.3);
+      c.fillStyle = 'rgba(0,0,0,.65)'; c.fillRect(GZ.x, Math.max(0, GZ.y - fs * 1.6), tw + fs, fs * 1.6);
+      c.fillStyle = '#FFFFFF'; c.fillText(label, GZ.x + fs / 2, Math.max(0, GZ.y - fs * 1.6) + fs * 1.3);
       c.restore();
     }
-    if (sel && boxes[sel]){
-      var sb = boxes[sel];
+    if (sel && (sel === 'all' || boxes[sel])){
+      var selList = sel === 'all' ? ['text', 'mark', 'photo', 'sig', 'cap'].filter(function(k2){ return boxes[k2]; }).map(function(k2){ return boxes[k2]; }) : [boxes[sel]];
       c.save();
       c.setLineDash([lw2 * 4, lw2 * 3]);
-      [['#000000', lw2 * 2.4], ['#FFFFFF', lw2]].forEach(function(ln){
-        c.strokeStyle = ln[0]; c.lineWidth = ln[1];
-        if (sb.kind === 'circle'){ c.beginPath(); c.arc(sb.cx, sb.cy, sb.r + lw2 * 3, 0, Math.PI * 2); c.stroke(); }
-        else c.strokeRect(sb.x - lw2 * 3, sb.y - lw2 * 3, sb.w + lw2 * 6, sb.h + lw2 * 6);
+      selList.forEach(function(sb){
+        [['#000000', lw2 * 2.4], ['#FFFFFF', lw2]].forEach(function(ln){
+          c.strokeStyle = ln[0]; c.lineWidth = ln[1];
+          if (sb.kind === 'circle'){ c.beginPath(); c.arc(sb.cx, sb.cy, sb.r + lw2 * 3, 0, Math.PI * 2); c.stroke(); }
+          else c.strokeRect(sb.x - lw2 * 3, sb.y - lw2 * 3, sb.w + lw2 * 6, sb.h + lw2 * 6);
+        });
       });
       c.setLineDash([]);
-      var lx = sb.kind === 'circle' ? sb.cx - sb.r : sb.x - lw2 * 3;
-      var ly = sb.kind === 'circle' ? sb.cy - sb.r - lw2 * 3 : sb.y - lw2 * 3;
+      var lx = Infinity, ly = Infinity;
+      selList.forEach(function(sb){
+        lx = Math.min(lx, sb.kind === 'circle' ? sb.cx - sb.r : sb.x - lw2 * 3);
+        ly = Math.min(ly, sb.kind === 'circle' ? sb.cy - sb.r - lw2 * 3 : sb.y - lw2 * 3);
+      });
       c.font = '700 ' + fs + 'px "Archivo", system-ui, sans-serif';
       c.textAlign = 'left'; c.textBaseline = 'bottom';
       var nm = ELEM_NAMES[sel];
@@ -1199,7 +1664,7 @@ function schedule(){
 function draw(){
   var P = PRESETS[S.preset] || PRESETS.x;
   GEO = render(cv, P, 1, true);
-  cv.setAttribute('aria-label', 'Aperçu de la citation : ' + S.text.replace(/\[\[|\]\]/g, ''));
+  cv.setAttribute('aria-label', 'Aperçu de la citation : ' + plain(S.text));
 }
 
 /* ---------- interface ---------- */
@@ -1211,7 +1676,12 @@ var FMT = {
   bgX: function(v){ return Math.round(v * 100) + ' %'; },
   bgY: function(v){ return Math.round(v * 100) + ' %'; },
   bgDim: function(v){ return Math.round(v * 100) + ' %'; },
-  size: function(v){ return v + ' px'; }
+  size: function(v){ return v + ' px'; },
+  lhx: function(v){ return '×' + (+v).toFixed(2); },
+  track: function(v){ return (+v > 0 ? '+' : '') + (+v).toFixed(1) + ' %'; },
+  customScale: function(v){ return '×' + (+v).toFixed(2); },
+  glow: function(v){ return '×' + (+v).toFixed(2); },
+  texAmt: function(v){ return Math.round(v * 100) + ' %'; }
 };
 function syncUI(){
   $$('[data-k]').forEach(function(el){
@@ -1228,17 +1698,27 @@ function syncUI(){
   $('#hl').disabled = S.hlSame;
   $('#sigColor').disabled = S.sigSame;
   $('#borderW').disabled = S.border === 'none';
+  $('#texAmt').disabled = S.texture === 'none';
+  $('#glow').disabled = S.style !== 'neon';
+  $('#glowHint').textContent = S.style === 'neon' ? '' : 'Réglable uniquement avec le style Néon.';
   ['zoom', 'fx', 'fy', 'filter'].forEach(function(id){
     $$('[data-k="' + id + '"]').forEach(function(el){ el.disabled = !photo; });
   });
   ['bgUse', 'bgDim', 'bgGray', 'bgZoom', 'bgX', 'bgY'].forEach(function(id){
     $$('[data-k="' + id + '"]').forEach(function(el){ el.disabled = !bgImg; });
   });
+  $('#customRm').disabled = !customImg;
   $('#rmPhoto').disabled = !photo;
   $('#rmBg').disabled = !bgImg;
-  $$('[data-k="scale"]').forEach(function(el){ el.disabled = S.preset === 'yt'; });
-  $('#guides').disabled = S.preset !== 'yt';
+  $$('[data-k="scale"]').forEach(function(el){ el.disabled = !!(PRESETS[S.preset] || {}).single; });
+  $('#guides').disabled = !((PRESETS[S.preset] || {}).safe || (PRESETS[S.preset] || {}).view);
   $('#styleHint').textContent = STYLE_HINTS[S.style] || '';
+  var PP = PRESETS[S.preset] || PRESETS.x;
+  $$('[data-k="scale"]').forEach(function(el){
+    var m = +el.value, sp = el.nextElementSibling;
+    if (sp) sp.textContent = (m === 1 ? 'Standard' : 'HD ×2') + ' · ' + (PP.w * m) + '×' + (PP.h * m);
+  });
+  $('#dl').textContent = 'Télécharger ' + (PP.w * (PP.single ? 1 : S.scale)) + '×' + (PP.h * (PP.single ? 1 : S.scale));
   if (typeof syncLayoutButtons === 'function') syncLayoutButtons();
 }
 function onCtl(e){
@@ -1253,6 +1733,7 @@ function onCtl(e){
   if (el.dataset.num !== undefined) v = parseFloat(v);
   S[k] = v;
   if (k === 'font') S.upper = QFONTS[v].upper;
+  if (k === 'custom' && v) S.symbol = 'custom';
   if (k === 'preset'){ resetOffsets(); sel = null; }
   syncUI();
   schedule();
@@ -1286,6 +1767,94 @@ THEMES.forEach(function(t){
     syncUI(); schedule();
   });
   $('#themes').appendChild(b);
+});
+
+/* symbole perso : icône importée */
+$('#customPick').addEventListener('click', function(){ $('#customFile').click(); });
+function setCustomIcon(img, src){
+  var w = img.naturalWidth || 256, h = img.naturalHeight || 256, k = Math.min(1, 512 / Math.max(w, h));
+  if (!img.naturalWidth) k = 1;
+  var oc = document.createElement('canvas');
+  oc.width = Math.max(1, Math.round(w * k)); oc.height = Math.max(1, Math.round(h * k));
+  oc.getContext('2d').drawImage(img, 0, 0, oc.width, oc.height);
+  customImg = oc; customSrc = src;
+}
+$('#customFile').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  readImage(f, function(img, src){
+    setCustomIcon(img, src);
+    S.symbol = 'custom'; S.customMode = 'tint';
+    syncUI(); schedule();
+    say('Icône importée, remplie de la couleur d’accent. Choisis « Couleurs d’origine » pour garder ses couleurs.');
+  });
+});
+$('#customRm').addEventListener('click', function(){ customImg = null; customSrc = null; syncUI(); schedule(); say('Icône retirée.'); });
+
+/* mise en forme : gras, italique, souligné, barré, taille, couleur */
+function formatSel(label, fn){
+  var ta = $('#text');
+  var a = ta.selectionStart, b = ta.selectionEnd;
+  var f = toFlags(ta.value);
+  var whole = a === b, lo = 0, hi = f.chars.length;
+  if (!whole){
+    lo = f.map[a]; hi = f.map[b];
+    while (lo < hi && /\s/.test(f.chars[lo].ch)) lo++;
+    while (hi > lo && /\s/.test(f.chars[hi - 1].ch)) hi--;
+  }
+  var hasWord = false;
+  for (var q2 = lo; q2 < hi; q2++) if (!/\s/.test(f.chars[q2].ch)) hasWord = true;
+  if (!hasWord){ say('Écris ou sélectionne du texte d’abord.'); return; }
+  var res = fn(f.chars, lo, hi);
+  var out = fromFlagsPos(f.chars);
+  ta.value = out.text; S.text = out.text;
+  if (!whole){ try { ta.focus({ preventScroll: true }); ta.setSelectionRange(out.pos[lo], out.pos[hi - 1] + 1); } catch (e) {} }
+  schedule();
+  say((res || label) + (whole ? ' (toute la citation)' : '') + '.');
+}
+function allHave(chars, lo, hi, test){
+  for (var i = lo; i < hi; i++) if (!/\s/.test(chars[i].ch) && !test(chars[i])) return false;
+  return true;
+}
+function toggleFlag(key, name){
+  formatSel(name, function(chars, lo, hi){
+    var all = allHave(chars, lo, hi, function(c){ return c[key]; });
+    for (var i = lo; i < hi; i++) chars[i][key] = !all;
+    return name + (all ? ' retiré' : ' appliqué');
+  });
+}
+function toggleSize(kind, name){
+  formatSel(name, function(chars, lo, hi){
+    var all = allHave(chars, lo, hi, function(c){ return c.sz === kind; });
+    for (var i = lo; i < hi; i++) chars[i].sz = all ? '' : kind;
+    return name + (all ? ' retiré' : ' appliqué');
+  });
+}
+var FMT_ACTIONS = {
+  b: function(){ toggleFlag('b', 'Gras'); },
+  i: function(){ toggleFlag('i', 'Italique'); },
+  u: function(){ toggleFlag('u', 'Souligné'); },
+  s: function(){ toggleFlag('s', 'Barré'); },
+  big: function(){ toggleSize('big', 'Texte agrandi'); },
+  small: function(){ toggleSize('small', 'Texte réduit'); },
+  color: function(){
+    var col = $('#fmtColor').value.toLowerCase();
+    formatSel('Couleur appliquée', function(chars, lo, hi){ for (var i = lo; i < hi; i++) chars[i].col = col; });
+  },
+  clear: function(){
+    formatSel('Formats effacés', function(chars, lo, hi){
+      for (var i = lo; i < hi; i++){ var c = chars[i]; c.b = c.i = c.u = c.s = false; c.sz = ''; c.col = ''; }
+    });
+  }
+};
+$$('[data-fmt]').forEach(function(btn){
+  btn.addEventListener('click', function(){ FMT_ACTIONS[btn.dataset.fmt](); });
+});
+$('#text').addEventListener('keydown', function(e){
+  if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey) return;
+  var k = e.key.toLowerCase();
+  if (k === 'b' || k === 'i' || k === 'u'){ e.preventDefault(); FMT_ACTIONS[k](); }
 });
 
 /* surlignage */
@@ -1343,23 +1912,27 @@ function setBg(img){
 function readImage(file, done){
   if (!file) return;
   if (!/^image\//.test(file.type)){ say('Ce fichier n’est pas une image. Choisis un JPG, un PNG ou un WebP.'); return; }
-  var url = URL.createObjectURL(file);
-  var img = new Image();
-  img.onload = function(){ URL.revokeObjectURL(url); done(img); };
-  img.onerror = function(){ URL.revokeObjectURL(url); say('Impossible de lire cette image.'); };
-  img.src = url;
+  var fr = new FileReader();
+  fr.onload = function(){
+    var img = new Image();
+    img.onload = function(){ done(img, fr.result); };
+    img.onerror = function(){ say('Impossible de lire cette image.'); };
+    img.src = fr.result;
+  };
+  fr.onerror = function(){ say('Impossible de lire cette image.'); };
+  fr.readAsDataURL(file);
 }
 function loadPhotoFile(file){
-  readImage(file, function(img){
-    setPhoto(img);
+  readImage(file, function(img, src){
+    setPhoto(img); photoSrc = src;
     S.zoom = 1; S.fx = 0.5; S.fy = 0.3;
     syncUI(); schedule();
     say('Photo ajoutée. Fais-la glisser dans le cercle pour la recadrer.');
   });
 }
 function loadBgFile(file){
-  readImage(file, function(img){
-    setBg(img);
+  readImage(file, function(img, src){
+    setBg(img); bgSrc = src;
     S.bgUse = true; S.bgZoom = 1; S.bgX = 0.5; S.bgY = 0.5;
     syncUI(); schedule();
     say('Image de fond ajoutée. Règle le voile pour garder la citation lisible.');
@@ -1367,8 +1940,8 @@ function loadBgFile(file){
 }
 function loadDefaultPhoto(){
   var img = new Image();
-  img.onload = function(){ setPhoto(img); syncUI(); schedule(); };
-  img.onerror = function(){ photo = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule(); };
+  img.onload = function(){ setPhoto(img); photoSrc = 'default'; syncUI(); schedule(); };
+  img.onerror = function(){ photo = null; photoSrc = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule(); };
   img.src = 'portrait.jpg';
 }
 $('#file').addEventListener('change', function(e){
@@ -1380,11 +1953,11 @@ $('#bgfile').addEventListener('change', function(e){
   e.target.value = '';
 });
 $('#rmPhoto').addEventListener('click', function(){
-  photo = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule();
+  photo = null; photoSrc = null; drawThumbTo('#thumb', null, 0); syncUI(); schedule();
   say('Photo retirée.');
 });
 $('#rmBg').addEventListener('click', function(){
-  bgImg = null; S.bgUse = false; drawThumbTo('#bgthumb', null, 0); syncUI(); schedule();
+  bgImg = null; bgSrc = null; S.bgUse = false; drawThumbTo('#bgthumb', null, 0); syncUI(); schedule();
   say('Image de fond retirée.');
 });
 function wireDrop(el, handler){
@@ -1413,6 +1986,26 @@ function scaleOf(){
   var r = cv.getBoundingClientRect();
   return r.width ? cv.width / r.width : 1;
 }
+function tgt(k){ return S.follow ? ({ mark: 'text', sig: 'photo', cap: 'photo' }[k] || k) : k; }
+function carriersList(){
+  if (S.follow) return [(S.style === 'poster' || S.style === 'stamp') ? 'shape' : 'text', S.style === 'duo' ? 'shape' : 'photo'].filter(function(v, i, a){ return a.indexOf(v) === i; });
+  if (S.style === 'poster' || S.style === 'stamp') return ['shape', 'photo', 'sig', 'cap'];
+  if (S.style === 'duo') return ['shape', 'text', 'mark'];
+  return ['text', 'mark', 'photo', 'sig', 'cap'];
+}
+function targets(key){ return key === 'all' ? carriersList() : [tgt(key)]; }
+function unionBox(){
+  var bx = GEO.boxes, x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  if (!bx) return null;
+  ['text', 'mark', 'photo', 'sig', 'cap'].forEach(function(key){
+    var b = bx[key];
+    if (!b) return;
+    var r = b.kind === 'circle' ? { x: b.cx - b.r, y: b.cy - b.r, w: 2 * b.r, h: 2 * b.r } : b;
+    x0 = Math.min(x0, r.x); y0 = Math.min(y0, r.y); x1 = Math.max(x1, r.x + r.w); y1 = Math.max(y1, r.y + r.h);
+  });
+  return x0 === Infinity ? null : { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
+}
+function selBox(key){ return key === 'all' ? unionBox() : (GEO.boxes && GEO.boxes[key]); }
 function centerOf(b){
   return b.kind === 'circle' ? { x: b.cx, y: b.cy } : { x: b.x + b.w / 2, y: b.y + b.h / 2 };
 }
@@ -1449,18 +2042,24 @@ $$('[data-sel]').forEach(function(el){
   el.addEventListener('change', function(){ if (el.checked) selectEl(el.value); });
 });
 
+document.addEventListener('pointerdown', function(e){
+  if (!sel || e.target === cv) return;
+  if (e.target.closest && (e.target.closest('#g-lay') || e.target.closest('[aria-labelledby="g-lay"]'))) return;
+  selectEl(null);
+});
 cv.addEventListener('pointerdown', function(e){
   var p = toCanvas(e);
   var key = hitTest(p);
   var mode = null;
   if (key === 'photo' && photo && (cropMode || e.shiftKey || e.altKey)) mode = 'crop';
-  else if (key) mode = 'move';
+  else if (key){ mode = 'move'; if (sel === 'all') key = 'all'; }
   else if (S.bgUse && bgImg) mode = 'bg';
   selectEl(key);
   cv.focus({ preventScroll: true });
   if (!mode) return;
-  var b = key ? GEO.boxes[key] : null;
-  drag = { mode: mode, key: key, x: p.x, y: p.y, o0: key ? { x: OFF[key].x, y: OFF[key].y } : null, c0: b ? centerOf(b) : null };
+  var b = key ? selBox(key) : null;
+  drag = { mode: mode, key: key, x: p.x, y: p.y, c0: b ? centerOf(b) : null,
+    os: (key && mode === 'move') ? targets(key).map(function(k2){ return { k: k2, x: OFF[k2].x, y: OFF[k2].y }; }) : null };
   try { cv.setPointerCapture(e.pointerId); } catch (err) {}
   cv.style.cursor = 'grabbing';
   e.preventDefault();
@@ -1474,7 +2073,7 @@ cv.addEventListener('pointermove', function(e){
   }
   if (drag.mode === 'move'){
     var R = GEO.region, dx = p.x - drag.x, dy = p.y - drag.y;
-    var nx = drag.o0.x + dx / R.w, ny = drag.o0.y + dy / R.h;
+    var nx = dx / R.w, ny = dy / R.h;
     GUIDE.v = false; GUIDE.h = false;
     if (S.snap){
       var thr = 10 * scaleOf();
@@ -1483,20 +2082,20 @@ cv.addEventListener('pointermove', function(e){
       if (Math.abs(cx - mx) < thr){ nx += (mx - cx) / R.w; GUIDE.v = true; }
       if (Math.abs(cy - my) < thr){ ny += (my - cy) / R.h; GUIDE.h = true; }
     }
-    OFF[drag.key].x = nx; OFF[drag.key].y = ny;
+    drag.os.forEach(function(o){ OFF[o.k].x = o.x + nx; OFF[o.k].y = o.y + ny; });
   } else if (drag.mode === 'crop'){
     var g = GEO.photo, d = 2 * g.ri;
     var s = Math.max(d / photo.width, d / photo.height) * S.zoom;
     var dw = photo.width * s, dh = photo.height * s;
-    if (dw - d > 1) S.fx = clamp(S.fx - (p.x - drag.x) / (dw - d), 0, 1);
-    if (dh - d > 1) S.fy = clamp(S.fy - (p.y - drag.y) / (dh - d), 0, 1);
+    if (Math.abs(dw - d) > 1) S.fx = clamp(S.fx - (p.x - drag.x) / (dw - d), 0, 1);
+    if (Math.abs(dh - d) > 1) S.fy = clamp(S.fy - (p.y - drag.y) / (dh - d), 0, 1);
     drag.x = p.x; drag.y = p.y;
     syncUI();
   } else {
     var bs = Math.max(cv.width / bgImg.width, cv.height / bgImg.height) * S.bgZoom;
     var bw = bgImg.width * bs, bh = bgImg.height * bs;
-    if (bw - cv.width > 1) S.bgX = clamp(S.bgX - (p.x - drag.x) / (bw - cv.width), 0, 1);
-    if (bh - cv.height > 1) S.bgY = clamp(S.bgY - (p.y - drag.y) / (bh - cv.height), 0, 1);
+    if (Math.abs(bw - cv.width) > 1) S.bgX = clamp(S.bgX - (p.x - drag.x) / (bw - cv.width), 0, 1);
+    if (Math.abs(bh - cv.height) > 1) S.bgY = clamp(S.bgY - (p.y - drag.y) / (bh - cv.height), 0, 1);
     drag.x = p.x; drag.y = p.y;
     syncUI();
   }
@@ -1512,27 +2111,39 @@ cv.addEventListener('pointercancel', endDrag);
 cv.addEventListener('wheel', function(e){
   if (photo && hitTest(toCanvas(e)) === 'photo'){
     e.preventDefault();
-    S.zoom = clamp(S.zoom * Math.exp(-e.deltaY * 0.0015), 1, 4);
+    S.zoom = clamp(S.zoom * Math.exp(-e.deltaY * 0.0015), 0.3, 4);
     syncUI(); schedule();
   }
 }, { passive: false });
-cv.addEventListener('keydown', function(e){
-  if (e.key === 'Escape'){ selectEl(null); return; }
+function nudge(e){
+  if (e.key === 'Escape' && sel){ selectEl(null); return; }
   var dir = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
-  if (!dir || !sel || !GEO.region) return;
+  if (!dir || !sel || !GEO.region || e.ctrlKey || e.metaKey || e.altKey) return;
+  var t = e.target, tag = t && t.tagName;
+  if (t && t !== cv){
+    if (tag === 'TEXTAREA' || tag === 'SELECT' || t.isContentEditable) return;
+    if (tag === 'INPUT' && t.type !== 'checkbox' && !(t.type === 'radio' && t.hasAttribute('data-sel'))) return;
+  }
   e.preventDefault();
   var step = Math.max(1, cv.width / 1500) * (e.shiftKey ? 10 : 1);
-  OFF[sel].x += dir[0] * step / GEO.region.w;
-  OFF[sel].y += dir[1] * step / GEO.region.h;
+  targets(sel).forEach(function(tk){
+    OFF[tk].x += dir[0] * step / GEO.region.w;
+    OFF[tk].y += dir[1] * step / GEO.region.h;
+  });
   schedule();
-});
+}
+document.addEventListener('keydown', nudge);
 
 /* boutons de disposition */
 function centerSel(axis){
-  if (!sel || !GEO.boxes[sel] || !GEO.region) return;
-  var R = GEO.region, c = centerOf(GEO.boxes[sel]);
-  if (axis === 'x') OFF[sel].x += (R.x + R.w / 2 - c.x) / R.w;
-  else OFF[sel].y += (R.y + R.h / 2 - c.y) / R.h;
+  if (!sel || !GEO.region) return;
+  var bx = selBox(sel);
+  if (!bx) return;
+  var R = GEO.region, c = centerOf(bx);
+  targets(sel).forEach(function(k){
+    if (axis === 'x') OFF[k].x += (R.x + R.w / 2 - c.x) / R.w;
+    else OFF[k].y += (R.y + R.h / 2 - c.y) / R.h;
+  });
   schedule();
 }
 function centerAll(){
@@ -1547,7 +2158,16 @@ function centerAll(){
   });
   if (x0 === Infinity) return;
   var dx = (R.x + R.w / 2) - (x0 + x1) / 2, dy = (R.y + R.h / 2) - (y0 + y1) / 2;
-  var carriers = [(S.style === 'poster' || S.style === 'stamp') ? 'shape' : 'text', S.style === 'duo' ? 'shape' : 'photo'];
+  var carriers;
+  if (S.follow){
+    carriers = [(S.style === 'poster' || S.style === 'stamp') ? 'shape' : 'text', S.style === 'duo' ? 'shape' : 'photo'];
+  } else if (S.style === 'poster' || S.style === 'stamp'){
+    carriers = ['shape', 'photo', 'sig', 'cap'];
+  } else if (S.style === 'duo'){
+    carriers = ['shape', 'text', 'mark'];
+  } else {
+    carriers = ['text', 'mark', 'photo', 'sig', 'cap'];
+  }
   carriers.filter(function(v, i){ return carriers.indexOf(v) === i; }).forEach(function(key){
     OFF[key].x += dx / R.w; OFF[key].y += dy / R.h;
   });
@@ -1559,7 +2179,7 @@ $('#centerY').addEventListener('click', function(){ centerSel('y'); });
 $('#centerAll').addEventListener('click', centerAll);
 $('#resetSel').addEventListener('click', function(){
   if (!sel) return;
-  OFF[sel] = { x: 0, y: 0 };
+  if (sel === 'all') resetOffsets(); else OFF[tgt(sel)] = { x: 0, y: 0 };
   schedule();
   say(ELEM_NAMES[sel] + ' replacé à sa position d’origine.');
 });
@@ -1567,6 +2187,14 @@ $('#resetAll').addEventListener('click', function(){
   resetOffsets();
   schedule();
   say('Tous les éléments sont replacés.');
+});
+$('#selAll').addEventListener('click', function(){ selectEl('all'); say('Tous les éléments sont sélectionnés : glisse ou utilise les flèches pour les déplacer ensemble.'); });
+document.addEventListener('keydown', function(e){
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a'){
+    var t = e.target, tag = t && t.tagName;
+    if (tag === 'TEXTAREA' || tag === 'SELECT' || (tag === 'INPUT' && t.type !== 'checkbox' && t.type !== 'radio')) return;
+    e.preventDefault(); selectEl('all');
+  }
 });
 $('#cropMode').addEventListener('change', function(e){ cropMode = e.target.checked; });
 
@@ -1577,7 +2205,7 @@ function slug(t){
 var dlBtn = $('#dl');
 dlBtn.addEventListener('click', async function(){
   var P = PRESETS[S.preset] || PRESETS.x;
-  var k = S.preset === 'yt' ? 1 : S.scale;
+  var k = P.single ? 1 : S.scale;
   var jpeg = S.format === 'jpeg';
   var off = document.createElement('canvas');
   var blob = null;
@@ -1598,12 +2226,13 @@ dlBtn.addEventListener('click', async function(){
     dlBtn.disabled = false;
     return;
   }
-  var name = 'citation' + (slug(S.sig) ? '-' + slug(S.sig) : '') + (S.preset === 'yt' ? '-banniere-youtube' : S.preset === 'th' ? '-miniature-youtube' : '') + (jpeg ? '.jpg' : '.png');
+  var name = 'citation' + (slug(S.sig) ? '-' + slug(S.sig) : '') + ('-' + (P.file || S.preset)) + (jpeg ? '.jpg' : '.png');
   try {
     await dl.save({ filename: name, data: blob });
     var mo = blob.size / 1048576;
     var msg = 'Image enregistrée (' + off.width + ' × ' + off.height + ' px, ' + mo.toFixed(1).replace('.', ',') + ' Mo).';
     if (S.preset === 'yt' && mo > 6) msg += ' YouTube limite la bannière à 6 Mo : choisis JPEG.';
+    if (S.preset === 'li' && mo > 8) msg += ' LinkedIn limite la bannière à 8 Mo : choisis JPEG.';
     if (S.preset === 'th' && mo > 2) msg += ' YouTube limite la miniature à 2 Mo : choisis JPEG.';
     say(msg);
   } catch (err3){
@@ -1614,6 +2243,130 @@ dlBtn.addEventListener('click', async function(){
     else say('Le téléchargement a échoué. Fais un clic droit sur l’aperçu pour enregistrer l’image.');
   }
   dlBtn.disabled = false;
+});
+
+/* ---------- export / import complet ---------- */
+var SHARE_APP = 'generateur-citations';
+function buildExport(withImages){
+  var st = {};
+  Object.keys(DEFAULTS).forEach(function(k){ st[k] = S[k]; });
+  var off = {};
+  ELEMS.forEach(function(k){ off[k] = { x: OFF[k].x, y: OFF[k].y }; });
+  var o = { app: SHARE_APP, version: 1, exportedAt: new Date().toISOString(), settings: st, offsets: off };
+  if (withImages) o.images = { photo: photo ? photoSrc : null, bg: bgImg ? bgSrc : null, icon: customImg ? customSrc : null };
+  return JSON.stringify(o, null, 1);
+}
+function shareMsg(t){ $('#shareMsg').textContent = t; say(t); }
+function exportCode(){
+  var code = buildExport($('#shareImgs').checked);
+  $('#exCode').value = code;
+  return code;
+}
+$('#exCopy').addEventListener('click', async function(){
+  var code = exportCode(), ok = false;
+  try { if (navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(code); ok = true; } } catch (e){ ok = false; }
+  if (!ok){
+    $('#exWrap').hidden = false;
+    var ta = $('#exCode'); ta.focus(); ta.select();
+    try { ok = document.execCommand('copy'); } catch (e2){ ok = false; }
+    if (ok) $('#exWrap').hidden = true;
+  }
+  var kb = Math.max(1, Math.round(code.length / 1024));
+  shareMsg(ok ? 'Code copié (' + kb + ' Ko). Colle-le où tu veux, puis réimporte-le ici.' : 'Copie automatique bloquée par le navigateur : le code est affiché, copie-le avec Ctrl+C.');
+});
+$('#exFile').addEventListener('click', async function(){
+  var code = exportCode();
+  var blob = new Blob([code], { type: 'application/json' });
+  var name = 'citation-reglages' + (slug(S.sig) ? '-' + slug(S.sig) : '') + '.json';
+  var dl = null;
+  try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e){ dl = null; }
+  try {
+    if (dl) await dl.save({ filename: name, data: blob });
+    else {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+    shareMsg('Fichier ' + name + ' enregistré.');
+  } catch (err){
+    var c2 = err && err.code;
+    shareMsg(c2 === 'declined' ? 'Téléchargement annulé.' : 'Le fichier n’a pas pu être enregistré. Utilise « Copier le code ».');
+  }
+});
+function loadDataImage(src, done){
+  if (typeof src !== 'string' || src.indexOf('data:image/') !== 0 || src.length > 40000000) return;
+  var img = new Image();
+  img.onload = function(){ done(img); syncUI(); schedule(); };
+  img.src = src;
+}
+function importCode(text){
+  var o;
+  try { o = JSON.parse(String(text).trim()); } catch (e){ shareMsg('Ce code n’est pas valide : il est peut-être incomplet. Copie-le en entier.'); return; }
+  if (!o || o.app !== SHARE_APP || !o.settings || typeof o.settings !== 'object'){ shareMsg('Ce code ne vient pas de ce générateur.'); return; }
+  var n = 0;
+  Object.keys(DEFAULTS).forEach(function(key){
+    if (!(key in o.settings)) return;
+    var v = o.settings[key], d = DEFAULTS[key];
+    if (typeof v !== typeof d) return;
+    if (ENUMS[key] && !(v in ENUMS[key])) return;
+    if (typeof d === 'number'){
+      if (!isFinite(v)) return;
+      var el = document.querySelector('[data-k="' + key + '"]');
+      if (el && el.min !== '' && el.max !== '') v = clamp(v, parseFloat(el.min), parseFloat(el.max));
+    }
+    if (typeof d === 'string' && /^#/.test(d) && !/^#[0-9a-fA-F]{6}$/.test(v)) return;
+    if (typeof d === 'string' && v.length > 20000) return;
+    S[key] = v; n++;
+  });
+  resetOffsets(); sel = null;
+  if (o.offsets && typeof o.offsets === 'object'){
+    ELEMS.forEach(function(k){
+      var p = o.offsets[k];
+      if (p && isFinite(p.x) && isFinite(p.y)) OFF[k] = { x: clamp(+p.x, -4, 4), y: clamp(+p.y, -4, 4) };
+    });
+  }
+  var im = o.images && typeof o.images === 'object' ? o.images : null;
+  if (im){
+    if ('photo' in im){
+      if (im.photo === 'default') loadDefaultPhoto();
+      else if (im.photo === null){ photo = null; photoSrc = null; drawThumbTo('#thumb', null, 0); }
+      else loadDataImage(im.photo, function(img){ setPhoto(img); photoSrc = im.photo; });
+    }
+    if ('bg' in im){
+      if (im.bg === null){ bgImg = null; bgSrc = null; drawThumbTo('#bgthumb', null, 0); }
+      else loadDataImage(im.bg, function(img){ setBg(img); bgSrc = im.bg; });
+    }
+    if ('icon' in im){
+      if (im.icon === null){ customImg = null; customSrc = null; }
+      else loadDataImage(im.icon, function(img){ setCustomIcon(img, im.icon); });
+    }
+  }
+  syncUI(); schedule();
+  shareMsg('Import terminé : ' + n + ' réglages' + (im ? ' et les images' : '') + ' restaurés.' + (im ? '' : ' (Le code ne contenait pas d’images : celles d’ici sont conservées.)'));
+}
+$('#imPaste').addEventListener('click', async function(){
+  var txt = '';
+  try { if (navigator.clipboard && navigator.clipboard.readText) txt = await navigator.clipboard.readText(); } catch (e){ txt = ''; }
+  if (txt && txt.trim()){ $('#imWrap').hidden = true; importCode(txt); return; }
+  $('#imWrap').hidden = false;
+  $('#imCode').focus();
+  shareMsg('Le navigateur ne permet pas de lire le presse-papiers : colle le code dans la zone avec Ctrl+V.');
+});
+$('#imCode').addEventListener('paste', function(){
+  setTimeout(function(){
+    var v = $('#imCode').value;
+    if (v.trim()){ importCode(v); if (/^\s*\{/.test(v) && $('#shareMsg').textContent.indexOf('Import terminé') === 0){ $('#imCode').value = ''; $('#imWrap').hidden = true; } }
+  }, 0);
+});
+$('#imFile').addEventListener('click', function(){ $('#imFileIn').click(); });
+$('#imFileIn').addEventListener('change', function(e){
+  var f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  var fr = new FileReader();
+  fr.onload = function(){ $('#imCode').value = ''; importCode(fr.result); };
+  fr.onerror = function(){ shareMsg('Impossible de lire ce fichier.'); };
+  fr.readAsText(f);
 });
 
 /* ---------- styles enregistrés ---------- */
@@ -1781,8 +2534,8 @@ async function initStore(){
 
 $('#reset').addEventListener('click', function(){
   Object.assign(S, DEFAULTS);
-  resetOffsets(); sel = null;
-  bgImg = null; drawThumbTo('#bgthumb', null, 0);
+  resetOffsets(); sel = null; customImg = null; customSrc = null;
+  bgImg = null; bgSrc = null; drawThumbTo('#bgthumb', null, 0);
   syncUI();
   loadDefaultPhoto();
   schedule();
@@ -1794,8 +2547,9 @@ syncUI();
 draw();
 loadDefaultPhoto();
 initStore();
-var specs = ['400 40px "Anton"', '400 40px "Bebas Neue"', '400 40px "Archivo Black"', 'italic 700 40px "Playfair Display"',
-  '400 40px "Mrs Saint Delafield"', '400 40px "Mr Dafoe"', '400 40px "Yellowtail"', '600 20px "Archivo"'];
+var specs = ['600 20px "Archivo"'];
+Object.keys(QFONTS).forEach(function(k){ var q = QFONTS[k]; specs.push((q.style === 'italic' ? 'italic ' : '') + q.weight + ' 40px ' + q.css.split(',')[0]); });
+Object.keys(SFONTS).forEach(function(k){ specs.push('400 40px ' + SFONTS[k].css.split(',')[0]); });
 if (document.fonts && document.fonts.load){
   Promise.all(specs.map(function(f){ return document.fonts.load(f, 'AaÉéçÀ“«’'); }))
     .then(schedule, schedule);
