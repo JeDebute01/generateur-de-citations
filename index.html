@@ -2312,6 +2312,22 @@ $('#cropMode').addEventListener('change', function(e){ cropMode = e.target.check
 function slug(t){
   return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
+function showSaveBox(url, name, w, h){
+  var old = document.getElementById('saveBox'); if (old) old.remove();
+  var d = document.createElement('div'); d.id = 'saveBox';
+  d.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:16px';
+  var c = document.createElement('div');
+  c.style.cssText = 'background:#fff;color:#111;border-radius:12px;padding:16px;max-width:min(96vw,900px);max-height:94vh;display:flex;flex-direction:column;gap:10px;overflow:auto;font:14px system-ui,sans-serif';
+  var t = document.createElement('div'); t.textContent = 'Ton image (' + w + ' × ' + h + ' px) : clic droit puis « Enregistrer l’image sous » (appui long sur mobile), ou bouton ci-dessous.';
+  var im = document.createElement('img'); im.src = url; im.style.cssText = 'max-width:100%;max-height:60vh;object-fit:contain;border:1px solid #ddd';
+  var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:8px';
+  var a = document.createElement('a'); a.href = url; a.download = name; a.textContent = 'Télécharger'; a.style.cssText = 'background:#c8281e;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:600';
+  var b = document.createElement('button'); b.type = 'button'; b.textContent = 'Fermer'; b.style.cssText = 'padding:8px 14px;border-radius:8px;border:1px solid #bbb;background:#f4f4f4;cursor:pointer';
+  b.onclick = function(){ d.remove(); };
+  row.appendChild(a); row.appendChild(b); c.appendChild(t); c.appendChild(im); c.appendChild(row); d.appendChild(c);
+  d.addEventListener('click', function(e){ if (e.target === d) d.remove(); });
+  document.body.appendChild(d);
+}
 var dlBtn = $('#dl');
 dlBtn.addEventListener('click', async function(){
   var P = PRESETS[S.preset] || PRESETS.x;
@@ -2331,12 +2347,15 @@ dlBtn.addEventListener('click', async function(){
   if (!blob){ say('Impossible de générer l’image.'); dlBtn.disabled = false; return; }
   var dl = null;
   try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (err2){ dl = null; }
+  var name = 'citation' + (slug(S.sig) ? '-' + slug(S.sig) : '') + ('-' + (P.file || S.preset)) + (jpeg ? '.jpg' : '.png');
   if (!dl){
-    say('Le téléchargement direct n’est pas disponible ici. Fais un clic droit sur l’aperçu, puis « Enregistrer l’image sous ».');
+    var url = URL.createObjectURL(blob);
+    try { var a0 = document.createElement('a'); a0.href = url; a0.download = name; document.body.appendChild(a0); a0.click(); a0.remove(); } catch (e0){}
+    showSaveBox(url, name, off.width, off.height);
+    say('Si le téléchargement ne démarre pas, utilise le bouton ou le clic droit dans la fenêtre qui s’ouvre.');
     dlBtn.disabled = false;
     return;
   }
-  var name = 'citation' + (slug(S.sig) ? '-' + slug(S.sig) : '') + ('-' + (P.file || S.preset)) + (jpeg ? '.jpg' : '.png');
   try {
     await dl.save({ filename: name, data: blob });
     var mo = blob.size / 1048576;
